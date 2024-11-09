@@ -5551,7 +5551,7 @@ imgui.OnFrame(
 		imgui.CenterText(u8'Рекомендуется обновиться, дабы иметь весь актуальный функционал!')
 		imgui.Separator()
 		imgui.CenterText(u8('Что нового в версии ') .. u8(updateVer) .. ':')
-		imgui.Text(u8(updateInfoText))
+		imgui.Text(updateInfoText)
 		imgui.Separator()
 		if imgui.Button(fa.CIRCLE_XMARK .. u8' Не обновлять ',  imgui.ImVec2(250 * MONET_DPI_SCALE, 25 * MONET_DPI_SCALE)) then
 			UpdateWindow[0] = false
