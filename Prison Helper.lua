@@ -141,7 +141,7 @@ local default_settings = {
 	},
 }
 local configDirectory = getWorkingDirectory():gsub('\\','/') .. "/Prison Helper"
-local path_helper = getWorkingDirectory():gsub('\\','/') .. "/Prison_Helper.lua"
+local path_helper = getWorkingDirectory():gsub('\\','/') .. "/Prison Helper.lua"
 local path_settings = configDirectory .. "/Settings.json"
 function load_settings()
     if not doesDirectoryExist(configDirectory) then
@@ -2811,7 +2811,7 @@ function sampev.onServerMessage(color,text)
 			end)
 		end
 	end
-	if tonumber(settings.player_info.fraction_rank_number) >= 5 then
+	if tonumber(settings.player_info.fraction_rank_number) >= 6 then
 		if text:find("%[(.-)%] (.-) (.-)%[(.-)%]: (.+)") and color == 766526463 then -- /f /fb или /r /rb без тэга 
 			local tag, rank, name, playerID, message = string.match(text, "%[(.-)%] (.+) (.-)%[(.-)%]: (.+)")
 			if message:find('Прошу обьявить в розыск (%d) степени дело N(%d+)%. Причина%: (.+)') then
@@ -4055,9 +4055,9 @@ imgui.OnFrame(
 							end
 							imgui.SameLine()
 							if imgui.Button(fa.TRASH_CAN .. '##' .. chapter_index) then
-								imgui.OpenPopup(fa.TRIANGLE_EXCLAMATION .. u8' Prison_Helper - Предупреждение ##' .. chapter_index)
+								imgui.OpenPopup(fa.TRIANGLE_EXCLAMATION .. u8' Prison Helper - Предупреждение ##' .. chapter_index)
 							end
-							if imgui.BeginPopupModal(fa.TRIANGLE_EXCLAMATION .. u8' Prison_Helper - Предупреждение ##' .. chapter_index, _, imgui.WindowFlags.NoResize ) then
+							if imgui.BeginPopupModal(fa.TRIANGLE_EXCLAMATION .. u8' Prison Helper - Предупреждение ##' .. chapter_index, _, imgui.WindowFlags.NoResize ) then
 								imgui.CenterText(u8'Вы действительно хотите удалить пункт?')
 								imgui.CenterText(u8(chapter.name))
 								imgui.Separator()
@@ -4120,9 +4120,9 @@ imgui.OnFrame(
 											end
 											imgui.SameLine()
 											if imgui.Button(fa.TRASH_CAN .. '##' .. chapter_index .. '##' .. index) then
-												imgui.OpenPopup(fa.TRIANGLE_EXCLAMATION .. u8' Prison_Helper - Предупреждение ##' .. chapter_index .. '##' .. index)
+												imgui.OpenPopup(fa.TRIANGLE_EXCLAMATION .. u8' Prison Helper - Предупреждение ##' .. chapter_index .. '##' .. index)
 											end
-											if imgui.BeginPopupModal(fa.TRIANGLE_EXCLAMATION .. u8' Prison_Helper - Предупреждение ##' .. chapter_index .. '##' .. index, _, imgui.WindowFlags.NoResize ) then
+											if imgui.BeginPopupModal(fa.TRIANGLE_EXCLAMATION .. u8' Prison Helper - Предупреждение ##' .. chapter_index .. '##' .. index, _, imgui.WindowFlags.NoResize ) then
 												imgui.CenterText(u8'Вы действительно хотите удалить подпункт?')
 												imgui.CenterText(u8(item.text))
 												imgui.Separator()
@@ -4285,9 +4285,9 @@ imgui.OnFrame(
 							end
 							imgui.SameLine()
 							if imgui.Button(fa.TRASH_CAN .. '##smartpdd' .. chapter_index) then
-								imgui.OpenPopup(fa.TRIANGLE_EXCLAMATION .. u8' Prison_Helper - Предупреждение ##smartpdd' .. chapter_index)
+								imgui.OpenPopup(fa.TRIANGLE_EXCLAMATION .. u8' Prison Helper - Предупреждение ##smartpdd' .. chapter_index)
 							end
-							if imgui.BeginPopupModal(fa.TRIANGLE_EXCLAMATION .. u8' Prison_Helper - Предупреждение ##smartpdd' .. chapter_index, _, imgui.WindowFlags.NoResize ) then
+							if imgui.BeginPopupModal(fa.TRIANGLE_EXCLAMATION .. u8' Prison Helper - Предупреждение ##smartpdd' .. chapter_index, _, imgui.WindowFlags.NoResize ) then
 								imgui.CenterText(u8'Вы действительно хотите удалить пункт?')
 								imgui.CenterText(u8(chapter.name))
 								imgui.Separator()
@@ -4350,9 +4350,9 @@ imgui.OnFrame(
 											end
 											imgui.SameLine()
 											if imgui.Button(fa.TRASH_CAN .. '##' .. chapter_index .. '###smartpdd' .. index) then
-												imgui.OpenPopup(fa.TRIANGLE_EXCLAMATION .. u8' Prison_Helper - Предупреждение ##smartpdd' .. chapter_index .. '##' .. index)
+												imgui.OpenPopup(fa.TRIANGLE_EXCLAMATION .. u8' Prison Helper - Предупреждение ##smartpdd' .. chapter_index .. '##' .. index)
 											end
-											if imgui.BeginPopupModal(fa.TRIANGLE_EXCLAMATION .. u8' Prison_Helper - Предупреждение ##smartpdd' .. chapter_index .. '##' .. index, _, imgui.WindowFlags.NoResize ) then
+											if imgui.BeginPopupModal(fa.TRIANGLE_EXCLAMATION .. u8' Prison Helper - Предупреждение ##smartpdd' .. chapter_index .. '##' .. index, _, imgui.WindowFlags.NoResize ) then
 												imgui.CenterText(u8'Вы действительно хотите удалить подпункт?')
 												imgui.CenterText(u8(item.text))
 												imgui.Separator()
