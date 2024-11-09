@@ -1,5 +1,5 @@
 {
-  "current_version": "0.0.3",
+  "current_version": "0.0.4",
   "update_url": "https://raw.githubusercontent.com/WF-Helpers-MODS/Prison-Helper/refs/heads/main/Prison%20Helper.lua?token=GHSAT0AAAAAAC2GZOVISBUSZR2YW5NCZ5DUZZPMVYA",
-  "update_info": "v0.0.1 - Создание скрипта\nv0.0.2 - Удаление лишних комментариев\nv0.0.3 - Изменение цвета текста"
+  "update_info": "v0.0.1 - Создание скрипта\nv0.0.2 - Удаление лишних комментариев\nv0.0.3 - Изменение цвета текста\nv0.0.4 - Снижение доступа к команде /givewbook"
 }
