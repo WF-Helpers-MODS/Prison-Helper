@@ -3,7 +3,7 @@
 script_name("Prison Helper")
 script_description('Скрипт для Тюрьмы Строгого Режима LV')
 script_author("WF Helpers MODS")
-script_version("0.0.5")
+script_version("0.0.4")
 
 require('lib.moonloader')
 require ('encoding').default = 'CP1251'
@@ -3573,10 +3573,6 @@ imgui.OnFrame(
 							imgui.Columns(1)
 							imgui.Separator()
 							imgui.Columns(3)
-							imgui.CenterColumnText(u8"/book")
-							imgui.NextColumn()
-							imgui.CenterColumnText(u8"Недоступно")
-							imgui.Columns(1)
 							imgui.CenterColumnText(u8"/mask")
 							imgui.NextColumn()
 							imgui.CenterColumnText(u8"Надеть/снять балаклаву")
