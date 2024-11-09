@@ -3,7 +3,7 @@
 script_name("Prison Helper")
 script_description('Скрипт для Тюрьмы Строгого Режима LV')
 script_author("WF Helpers MODS")
-script_version("0.0.1")
+script_version("0.0.2")
 
 require('lib.moonloader')
 require ('encoding').default = 'CP1251'
