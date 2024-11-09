@@ -3,7 +3,7 @@
 script_name("Prison Helper")
 script_description('Скрипт для Тюрьмы Строгого Режима LV')
 script_author("WF Helpers MODS")
-script_version("0.0.4")
+script_version("0.0.5")
 
 require('lib.moonloader')
 require ('encoding').default = 'CP1251'
@@ -2831,7 +2831,7 @@ function sampev.onServerMessage(color,text)
 		local PlayerName = text:match("{FFFFFF}(.-) принял ваше предложение вступить к вам в организацию.")
 		sampSendChat("/r "..TranslateNick(PlayerName).." - наш новый сотрудник!")
 	end
-	if (text:find("У (.+) отсутствует трудовая книжка. Вы можете выдать ему книжку с помощью команды /givewbook") and tonumber(settings.player_info.fraction_rank_number) >= 9) then
+	if (text:find("У (.+) отсутствует трудовая книжка. Вы можете выдать ему книжку с помощью команды /givewbook") and tonumber(settings.player_info.fraction_rank_number) >= 6) then
 		local nick = text:match("У (.+) отсутствует трудовая книжка. Вы можете выдать ему книжку с помощью команды /givewbook")
 		local cmd = '/givewbook'
 		for _, command in ipairs(commands.commands_manage) do
@@ -3573,6 +3573,10 @@ imgui.OnFrame(
 							imgui.Columns(1)
 							imgui.Separator()
 							imgui.Columns(3)
+							imgui.CenterColumnText(u8"/book")
+							imgui.NextColumn()
+							imgui.CenterColumnText(u8"Недоступно")
+							imgui.Columns(1)
 							imgui.CenterColumnText(u8"/mask")
 							imgui.NextColumn()
 							imgui.CenterColumnText(u8"Надеть/снять балаклаву")
