@@ -1970,7 +1970,7 @@ function getNameOfARZVehicleModel(id)
 		sampAddChatMessage('[Prison Helper] {ffffff}Не удалось получить модель транспорта с ID ' .. id .. "! Причина: отсуствует файл VehiclesArizona.json", message_color)
 		sampAddChatMessage('[Prison Helper] {ffffff}Пытаюсь скачать файл VehiclesArizona.json в папку ' .. path_arzvehicles, message_color)
 		download_arzvehicles = true
-		downloadFileFromUrlToPath('https://raw.githubusercontent.com/MTGMODS/Prison-helper/main/VehiclesArizona/VehiclesArizona.json', path_arzvehicles)
+		downloadFileFromUrlToPath('https://raw.githubusercontent.com/MTGMODS/justice-helper/main/VehiclesArizona/VehiclesArizona.json', path_arzvehicles)
 		return ''
 	end
 end
