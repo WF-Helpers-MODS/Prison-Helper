@@ -3,7 +3,7 @@
 script_name("Prison Helper")
 script_description('Скрипт для Тюрьмы Строгого Режима LV')
 script_author("WF Helpers MODS")
-script_version("0.0.4")
+script_version("0.0.5")
 
 require('lib.moonloader')
 require ('encoding').default = 'CP1251'
@@ -39,8 +39,6 @@ local default_settings = {
 		bind_fastmenu = '[69]',
 		bind_leader_fastmenu = '[71]',
 		bind_command_stop = '[123]',
-		bind_1055 = '[101]',
-		bind_1066 = '[102]',
 	},
 	player_info = {
 		name_surname = '',
@@ -341,8 +339,6 @@ load_smart_pdd()
 -------------------------------------------- JSON COMMANDS ---------------------------------------------
 local commands = {
 	commands = {
-		{ cmd = '55', description = 'Проведение 10-55', text = '/r {my_doklad_nick} на CONTROL. Провожу 10-55 в районе {get_area} ({get_square}), СODE 4.&/m Водитель{get_storecar_model}, снизьте скорость и прижмитесь к обочине.&/m После остановки заглушите двигатель, держите руки на руле и не выходите из транспорта.&/m В случае неподчинения вы будете обьявлены в розыск, и по вам будет открыт огонь!', arg = '', enable = true, waiting = '1.200'},
-		{ cmd = '66', description = 'Проведение 10-66', text = '/r {my_doklad_nick} на CONTROL. Провожу 10-66 в районе {get_area} ({get_square}), СODE 3!&/m Водитель{get_storecar_model}, немедленно прижмитесь к обочине и заглушите двигатель!&/m В случае неподчинения вы будете обьявлены в розыск, и по вам будет открыт огонь!', arg = '', enable = true, waiting = '1.200'},
 		{ cmd = 'zd' , description = 'Привествие игрока' , text = 'Здраствуйте {get_ru_nick({arg_id})}&Я {my_ru_nick} - {fraction_rank} {fraction_tag}&Чем я могу Вам помочь?', arg = '{arg_id}' , enable = true , waiting = '1.200'},
 		{ cmd = 'bk' , description = 'Запрос помощи с координатами' , text = '/r {my_doklad_nick} на CONTROL. Срочно нужна помощь, высылаю свои координаты. CODE 1&/me достаёт свой КПК и отправляет координаты в базу данных {fraction_tag}&/bk 10-20', arg = '' , enable = true , waiting = '1.200'},
 		{ cmd = 'take' , description = 'Изьятие предметов игрока' , text = '/do В подсумке находиться небольшой зип-пакет.&/me достаёт из подсумка зип-пакет и отрывает его&/me кладёт в зип-пакет изьятые предметы задержанного человека&/take {arg_id}&/do Изьятые предметы в зип-пакете.&/todo Отлично*убирая зип-пакет в подсумок', arg = '{arg_id}' , enable = true , waiting = '1.200' },
@@ -1020,16 +1016,6 @@ if not isMonetLoader() then
 				end
 			end
 		end)
-		TrafficStopHotKey = hotkey.RegisterHotKey('TrafficStop', false, decodeJson(settings.general.bind_1055), function() 
-			if settings.general.use_binds then 
-				sampProcessChatInput('/55')
-			end
-		end)
-		TrafficStop2HotKey = hotkey.RegisterHotKey('TrafficStop2', false, decodeJson(settings.general.bind_1066), function() 
-			if settings.general.use_binds then 
-				sampProcessChatInput('/66')
-			end
-		end)
 		CommandStopHotKey = hotkey.RegisterHotKey('Stop Command', false, decodeJson(settings.general.bind_command_stop), function() 
 			if settings.general.use_binds then 
 				sampProcessChatInput('/stop')
@@ -1381,38 +1367,6 @@ function initialize_commands()
 				sampAddChatMessage('[Prison Helper] {ffffff}Используйте ' .. message_color_hex .. '/sob [ID игрока]', message_color)
 				play_error_sound()
 			end	
-		else
-			sampAddChatMessage('[Prison Helper] {ffffff}Дождитесь завершения отыгровки предыдущей команды!', message_color)
-			play_error_sound()
-		end
-	end)
-	sampRegisterChatCommand("pnv", function(arg)
-		if not isActiveCommand then
-			NightVision = not NightVision
-			if NightVision then
-				sampSendChat('/me достаёт из кармана очки ночного видения и надевает их')
-			else
-				sampSendChat('/me снимает с себя очки ночного видения и убирает их в карман')
-			end
-			setNightVision(NightVision)	
-			InfraredVision = false
-			setInfraredVision(InfraredVision)	
-		else
-			sampAddChatMessage('[Prison Helper] {ffffff}Дождитесь завершения отыгровки предыдущей команды!', message_color)
-			play_error_sound()
-		end
-	end)
-	sampRegisterChatCommand("irv", function(arg)
-		if not isActiveCommand then
-			InfraredVision = not InfraredVision
-			setInfraredVision(InfraredVision)	
-			NightVision = false
-			setNightVision(NightVision)	
-			if InfraredVision then
-				sampSendChat('/me достаёт из кармана инфакрасные очки и надевает их')
-			else
-				sampSendChat('/me снимает с себя инфакрасные очки и убирает их в карман')
-			end
 		else
 			sampAddChatMessage('[Prison Helper] {ffffff}Дождитесь завершения отыгровки предыдущей команды!', message_color)
 			play_error_sound()
@@ -3557,22 +3511,6 @@ imgui.OnFrame(
 							imgui.Columns(1)
 							imgui.Separator()
 							imgui.Columns(3)
-							imgui.CenterColumnText(u8"/pnv")
-							imgui.NextColumn()
-							imgui.CenterColumnText(u8"Надеть/снять очки ночного видения")
-							imgui.NextColumn()
-							imgui.CenterColumnText(u8"Недоступно")
-							imgui.Columns(1)
-							imgui.Separator()
-							imgui.Columns(3)
-							imgui.CenterColumnText(u8"/irv")
-							imgui.NextColumn()
-							imgui.CenterColumnText(u8"Надеть/снять инфакрасные очки")
-							imgui.NextColumn()
-							imgui.CenterColumnText(u8"Недоступно")
-							imgui.Columns(1)
-							imgui.Separator()
-							imgui.Columns(3)
 							imgui.CenterColumnText(u8"/mask")
 							imgui.NextColumn()
 							imgui.CenterColumnText(u8"Надеть/снять балаклаву")
@@ -3857,11 +3795,6 @@ imgui.OnFrame(
 									settings.general.mobile_fastmenu_button = true
 									save_settings()
 								end
-								if imgui.Checkbox(u8(' Отображение кнопок "55/66" (аналог /meg)'), checkbox_mobile_meg_button) then
-									settings.general.mobile_meg_button = checkbox_mobile_meg_button[0]
-									MegafonWindow[0] = checkbox_mobile_meg_button[0]
-									save_settings()
-								end
 								imgui.Separator()
 								imgui.CenterText(u8'Способ приостановки отыгровки команды:')
 								if imgui.RadioButtonIntPtr(u8" Только используя команду /stop", stop_type, 0) then
@@ -3951,26 +3884,6 @@ imgui.OnFrame(
 											settings.general.bind_command_stop = encodeJson(CommandStopHotKey:GetHotKey())
 											save_settings()
 										end
-										imgui.Separator()
-										imgui.CenterText(u8'Проведение Traffic Stop (аналог /55):')
-										local width = imgui.GetWindowWidth()
-										local calc = imgui.CalcTextSize(getNameKeysFrom(settings.general.bind_1055))
-										imgui.SetCursorPosX(width / 2 - calc.x / 2)
-										if TrafficStopHotKey:ShowHotKey() then
-											settings.general.bind_1055 = encodeJson(TrafficStopHotKey:GetHotKey())
-											save_settings()
-										end
-										imgui.Separator()
-
-										imgui.CenterText(u8'Проведение Traffic Stop повышенного риска (аналог /66):')
-										local width = imgui.GetWindowWidth()
-										local calc = imgui.CalcTextSize(getNameKeysFrom(settings.general.bind_1066))
-										imgui.SetCursorPosX(width / 2 - calc.x / 2)
-										if TrafficStop2HotKey:ShowHotKey() then
-											settings.general.bind_1066 = encodeJson(TrafficStop2HotKey:GetHotKey())
-											save_settings()
-										end
-
 										imgui.Separator()
 										if imgui.Button(fa.CIRCLE_XMARK .. u8' Закрыть', imgui.ImVec2(imgui.GetMiddleButtonX(1), 25 * MONET_DPI_SCALE)) then
 											imgui.CloseCurrentPopup()
@@ -4758,24 +4671,6 @@ imgui.OnFrame(
 		imgui.End()
     end
 )
-
-imgui.OnFrame(
-    function() return MegafonWindow[0] end,
-    function(player)
-		imgui.SetNextWindowPos(imgui.ImVec2(sizeX / 8.5, sizeY / 2.1), imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
-		imgui.Begin(fa.BUILDING_SHIELD .. " Prison Helper##fast_meg_button", MegafonWindow, imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoResize + imgui.WindowFlags.NoTitleBar  + imgui.WindowFlags.NoBackground )
-		if not isMonetLoader() and not sampIsChatInputActive() and not sampIsDialogActive() and not isSampfuncsConsoleActive() then player.HideCursor = true else player.HideCursor = false end
-		if imgui.Button(fa.BULLHORN .. u8' 10-55 ',  imgui.ImVec2(75 * MONET_DPI_SCALE, 25 * MONET_DPI_SCALE)) then
-			sampProcessChatInput('/55')
-		end
-		imgui.SameLine()
-		if imgui.Button(fa.BULLHORN .. u8' 10-66 ',  imgui.ImVec2(75 * MONET_DPI_SCALE, 25 * MONET_DPI_SCALE)) then
-			sampProcessChatInput('/66')
-		end
-		imgui.End()
-    end
-)
-
 
 imgui.OnFrame(
     function() return DeportamentWindow[0] end,
