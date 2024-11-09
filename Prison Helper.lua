@@ -3,7 +3,7 @@
 script_name("Prison Helper")
 script_description('Скрипт для Тюрьмы Строгого Режима LV')
 script_author("WF Helpers MODS")
-script_version("0.0.2")
+script_version("0.0.3")
 
 require('lib.moonloader')
 require ('encoding').default = 'CP1251'
@@ -895,11 +895,9 @@ local tagReplacements = {
 				local vehicle_pos = {getCarCoordinates(vehicle)}
 				local distance = getDistanceBetweenCoords3d(my_pos[1], my_pos[2], my_pos[3], vehicle_pos[1], vehicle_pos[2], vehicle_pos[3])
 				if distance < closest_distance and vehicle ~= my_car then
-					--sampAddChatMessage(math.floor(distance),-1)
 					closest_distance = distance
 					closest_car = vehicle
 				end
-				--sampAddChatMessage(select(2, sampGetPlayerIdByCharHandle(getDriverOfCar(vehicle))), 0x009EFF)
 			end
 		end
 		if closest_car then
@@ -911,17 +909,11 @@ local tagReplacements = {
 				CarColorName = colorNames[clr1] .. '-' .. colorNames[clr2] .. " цвета" or ""
 			end
 			function getVehPlateNumberByCarHandle(car)
-				-- for shit, plate in pairs(cache) do 
-				-- 	result, veh = sampGetCarHandleBySampVehicleId(plate.carID)
-				-- 	if result and veh == car then
-				-- 		return ' (' .. plate.number .. ') '
-				-- 	end
-				-- end
 				return ' '
 			end
 			return " " .. getNameOfARZVehicleModel(getCarModel(closest_car)) .. getVehPlateNumberByCarHandle(closest_car) .. CarColorName
 		else
-			sampAddChatMessage("[Prison Helper] {ffffff}Не удалось получить модель ближайшего транспорта с водителем!", 0x009EFF)
+			sampAddChatMessage("[Prison Helper] {ffffff}Не удалось получить модель ближайшего транспорта с водителем!", 0x424242)
 			return ''
 		end
 	end,
@@ -970,8 +962,8 @@ local binder_tags_text2 = [[
 
 local monet_no_errors, moon_monet = pcall(require, 'MoonMonet') -- безопасно подключаем библиотеку
 
-local message_color = 0x009EFF
-local message_color_hex = '{009EFF}'
+local message_color = 0x424242
+local message_color_hex = '{424242}'
 
 if settings.general.moonmonet_theme_enable and monet_no_errors then
 	function rgbToHex(rgb)
@@ -1966,7 +1958,6 @@ function getNameOfARZVehicleModel(id)
 		if #arzvehicles ~= 0 then
 			for _, vehicle in ipairs(arzvehicles) do
 				if vehicle.model_id == id then
-					--sampAddChatMessage("[Prison Helper] {ffffff}Самый ближайший транспорта к вам это " .. vehicle.name ..  " [ID " .. id .. "].", message_color)
 					return vehicle.name
 				end
 			end
@@ -2674,7 +2665,6 @@ function downloadFileFromUrlToPath(url, path)
 	if isMonetLoader() then
 		downloadToFile(url, path, function(type, pos, total_size)
 			if type == "downloading" then
-				--print(("Скачивание %d/%d"):format(pos, total_size))
 			elseif type == "finished" then
 				if download_helper then
 					sampAddChatMessage('[Prison Helper] {ffffff}Загрузка новой версии хелпера завершена успешно! Перезагрузка..',  message_color)
@@ -2754,7 +2744,6 @@ function sampev.onSendTakeDamage(playerId,damage,weapon)
 	end
 end
 function sampev.onServerMessage(color,text)
-	--sampAddChatMessage('color = ' .. color .. ' , text = '..text,-1)
 	if (settings.general.auto_uval and tonumber(settings.player_info.fraction_rank_number) >= 9) then
 		if text:find("%[(.-)%] (.-) (.-)%[(.-)%]: (.+)") and color == 766526463 then -- /f /fb или /r /rb без тэга 
 			local tag, rank, name, playerID, message = string.match(text, "%[(.-)%] (.+) (.-)%[(.-)%]: (.+)")
@@ -3202,7 +3191,6 @@ function onReceivePacket(id, bs)
 			if raknetBitStreamReadInt8(bs) == 17 then
 				raknetBitStreamIgnoreBits(bs, 32)
 				local cmd2 = raknetBitStreamReadString(bs, raknetBitStreamReadInt32(bs))
-				--sampAddChatMessage(cmd2,-1)
 				-- автоматический клик для ПК "Крушение самолета" и "Авария на шосе" (взято из кода Chapo)
 				local view = string.match(cmd2, "^window.executeEvent%('event%.setActiveView', [`']%[[\"%s]?(.-)[\"%s]?%][`']%);$")
 				if view ~= nil and settings.general.auto_clicker_situation then
@@ -3221,7 +3209,6 @@ function onReceivePacket(id, bs)
 end
 function onSendPacket(id, bs)
 	if id == 220 and isMonetLoader() then
-		-- автоматический клик для МОБАЙЛ "Крушение самолета" и "Авария на шосе" (взято из кода XRLM)
 		local id = raknetBitStreamReadInt8(bs)
 		local _1 = raknetBitStreamReadInt8(bs)
 		local _2 = raknetBitStreamReadInt8(bs)
@@ -4642,8 +4629,8 @@ imgui.OnFrame(
 				imgui.Separator()
 				if imgui.RadioButtonIntPtr(u8" Dark Theme ", theme, 0) then	
 					theme[0] = 0
-                    message_color = 0x009EFF
-                    message_color_hex = '{009EFF}'
+                    message_color = 0x424242
+                    message_color_hex = '{424242}'
 					settings.general.moonmonet_theme_enable = false
 					save_settings()
 					
@@ -4665,8 +4652,6 @@ imgui.OnFrame(
 					if theme[0] == 1 and imgui.ColorEdit3('## COLOR', mmcolor, imgui.ColorEditFlags.NoInputs) then
 						local r,g,b = mmcolor[0] * 255, mmcolor[1] * 255, mmcolor[2] * 255
 						local argb = join_argb(0, r, g, b)
-						-- settings.general.message_color = 
-						-- settings.general.message_color_hex = 
 						settings.general.moonmonet_theme_color = argb
 						message_color = "0x" .. argbToHexWithoutAlpha(0, r, g, b)
 						message_color_hex = '{' .. argbToHexWithoutAlpha(0, r, g, b) .. '}'
@@ -4779,7 +4764,6 @@ imgui.OnFrame(
     function(player)
 		imgui.SetNextWindowPos(imgui.ImVec2(sizeX / 8.5, sizeY / 2.1), imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
 		imgui.Begin(fa.BUILDING_SHIELD .. " Prison Helper##fast_meg_button", MegafonWindow, imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoResize + imgui.WindowFlags.NoTitleBar  + imgui.WindowFlags.NoBackground )
-		--if not isMonetLoader() then imgui.SetWindowFontScale(settings.general.custom_dpi) end
 		if not isMonetLoader() and not sampIsChatInputActive() and not sampIsDialogActive() and not isSampfuncsConsoleActive() then player.HideCursor = true else player.HideCursor = false end
 		if imgui.Button(fa.BULLHORN .. u8' 10-55 ',  imgui.ImVec2(75 * MONET_DPI_SCALE, 25 * MONET_DPI_SCALE)) then
 			sampProcessChatInput('/55')
@@ -5218,7 +5202,6 @@ imgui.OnFrame(
 			sizeYY = 24.5 * ( tonumber(#members) + 1 )
 		end
 		imgui.SetNextWindowSize(imgui.ImVec2(600 * MONET_DPI_SCALE, sizeYY * MONET_DPI_SCALE), imgui.Cond.FirstUseEver)
-		--imgui.SetNextWindowSize(imgui.ImVec2(600 * MONET_DPI_SCALE, 413 * MONET_DPI_SCALE), imgui.Cond.FirstUseEver)
 
 		imgui.Begin(fa.BUILDING_SHIELD .. " " ..  u8(members_fraction) .. " - " .. #members .. u8' сотрудников онлайн', MembersWindow, imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoResize )
 		for i, v in ipairs(members) do
@@ -5267,7 +5250,6 @@ imgui.OnFrame(
 			WantedWindow[0] = false
 		end
 		imgui.SetNextWindowSize(imgui.ImVec2(350 * MONET_DPI_SCALE, sizeYY * MONET_DPI_SCALE), imgui.Cond.FirstUseEver)
-		--imgui.SetNextWindowSize(imgui.ImVec2(600 * MONET_DPI_SCALE, 413 * MONET_DPI_SCALE), imgui.Cond.FirstUseEver)
 		
 		imgui.Begin(fa.STAR .. u8" Список преступников (всего " .. #wanted .. u8')', WantedWindow, imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoResize )
 		player.HideCursor = true
@@ -5320,7 +5302,6 @@ imgui.OnFrame(
     function() return FastMenu[0] end,
     function(player)
 		imgui.SetNextWindowPos(imgui.ImVec2(sizeX / 2, sizeY / 2), imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
-		--imgui.SetNextWindowSize(imgui.ImVec2(290 * MONET_DPI_SCALE, 415 * MONET_DPI_SCALE), imgui.Cond.FirstUseEver)
 		imgui.Begin(fa.USER .. ' '..sampGetPlayerNickname(player_id)..' ['..player_id.. ']##FastMenu', FastMenu, imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoResize )
 		for _, command in ipairs(commands.commands) do
 			if command.enable and command.arg == '{arg_id}' and not command.text:find('/cure') and not command.text:find('/unstuff') then
@@ -5786,11 +5767,9 @@ imgui.OnFrame(
 							if chapter.item then 
 								for _, item in ipairs(chapter.item) do
 									local popup_id = fa.TRIANGLE_EXCLAMATION .. u8' Перепроверьте данные перед выдачей розыска##' .. item.text .. item.lvl .. item.reason
-									-- imgui.PushStyleColor(imgui.Col.Button, imgui.ImVec4(1.00, 1.00, 1.00, 0.65))
 									if imgui.Button(u8(item.text)..'##' .. item.text .. item.lvl .. item.reason, imgui.ImVec2( imgui.GetMiddleButtonX(1), 25 * MONET_DPI_SCALE)) then
 										imgui.OpenPopup(popup_id)
 									end 
-									-- imgui.PopStyleColor()
 									if imgui.BeginPopupModal(popup_id, nil, imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoResize) then
 										imgui.Text(fa.USER .. u8' Игрок: ' .. u8(sampGetPlayerNickname(player_id)) .. ' [' .. player_id .. ']')
 										imgui.Text(fa.STAR .. u8' Уровень розыска: ' .. item.lvl)
@@ -5845,11 +5824,9 @@ imgui.OnFrame(
 						if chapter.item then 
 							for _, item in ipairs(chapter.item) do
 								local popup_id = fa.TRIANGLE_EXCLAMATION .. u8' Перепроверьте данные перед выдачей штрафа##' .. item.text .. item.amount .. item.reason
-								-- imgui.PushStyleColor(imgui.Col.Button, imgui.ImVec4(1.00, 1.00, 1.00, 0.65))
 								if imgui.Button(u8(item.text)..'##' .. item.text .. item.amount .. item.reason, imgui.ImVec2( imgui.GetMiddleButtonX(1), 25 * MONET_DPI_SCALE)) then
 									imgui.OpenPopup(popup_id)
 								end 
-								-- imgui.PopStyleColor()
 								if imgui.BeginPopupModal(popup_id, nil, imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoResize) then
 									imgui.Text(fa.USER .. u8' Игрок: ' .. u8(sampGetPlayerNickname(player_id)) .. ' [' .. player_id .. ']')
 									imgui.Text(fa.MONEY_CHECK_DOLLAR .. u8' Сумма штрафа: $' .. item.amount)
@@ -5878,11 +5855,9 @@ imgui.OnFrame(
 							if chapter.item then 
 								for _, item in ipairs(chapter.item) do
 									local popup_id = fa.TRIANGLE_EXCLAMATION .. u8' Перепроверьте данные перед выдачей штрафа##' .. item.text .. item.amount .. item.reason
-									-- imgui.PushStyleColor(imgui.Col.Button, imgui.ImVec4(1.00, 1.00, 1.00, 0.65))
 									if imgui.Button(u8(item.text)..'##' .. item.text .. item.amount .. item.reason, imgui.ImVec2( imgui.GetMiddleButtonX(1), 25 * MONET_DPI_SCALE)) then
 										imgui.OpenPopup(popup_id)
 									end 
-									-- imgui.PopStyleColor()
 									if imgui.BeginPopupModal(popup_id, nil, imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoResize) then
 										imgui.Text(fa.USER .. u8' Игрок: ' .. u8(sampGetPlayerNickname(player_id)) .. ' [' .. player_id .. ']')
 										imgui.Text(fa.MONEY_CHECK_DOLLAR .. u8' Сумма штрафа: $' .. item.amount)
