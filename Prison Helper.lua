@@ -34,7 +34,7 @@ local default_settings = {
 		mobile_stop_button = true,
 		mobile_meg_button = true,
 		use_binds = true,
-		use_info_menu = true,
+		use_info_menu = false,
 		bind_mainmenu = '[113]',
 		bind_fastmenu = '[69]',
 		bind_leader_fastmenu = '[71]',
@@ -913,7 +913,7 @@ local tagReplacements = {
 			end
 			return " " .. getNameOfARZVehicleModel(getCarModel(closest_car)) .. getVehPlateNumberByCarHandle(closest_car) .. CarColorName
 		else
-			sampAddChatMessage("[Prison Helper] {ffffff}Не удалось получить модель ближайшего транспорта с водителем!", 0x424242)
+			sampAddChatMessage("[Prison Helper] {ffffff}Не удалось получить модель ближайшего транспорта с водителем!", 0x6E6E6E)
 			return ''
 		end
 	end,
@@ -962,8 +962,8 @@ local binder_tags_text2 = [[
 
 local monet_no_errors, moon_monet = pcall(require, 'MoonMonet') -- безопасно подключаем библиотеку
 
-local message_color = 0x424242
-local message_color_hex = '{424242}'
+local message_color = 0x6E6E6E
+local message_color_hex = '{6E6E6E}'
 
 if settings.general.moonmonet_theme_enable and monet_no_errors then
 	function rgbToHex(rgb)
@@ -3025,7 +3025,7 @@ function sampev.onShowDialog(dialogid, style, title, button1, button2, text)
 				elseif settings.player_info.fraction == 'Армия ЛС' or settings.player_info.fraction == 'Армия LS' then
 					settings.player_info.fraction_tag = 'ЛСа'
 				else
-					settings.player_info.fraction_tag = 'ПД'
+					settings.player_info.fraction_tag = 'MSP'
 				end
 				settings.deportament.dep_tag1 = '[' .. settings.player_info.fraction_tag .. ']'
 				input_dep_tag1 = imgui.new.char[32](u8(settings.deportament.dep_tag1))
@@ -4629,8 +4629,8 @@ imgui.OnFrame(
 				imgui.Separator()
 				if imgui.RadioButtonIntPtr(u8" Dark Theme ", theme, 0) then	
 					theme[0] = 0
-                    message_color = 0x424242
-                    message_color_hex = '{424242}'
+                    message_color = 0x6E6E6E
+                    message_color_hex = '{6E6E6E}'
 					settings.general.moonmonet_theme_enable = false
 					save_settings()
 					
