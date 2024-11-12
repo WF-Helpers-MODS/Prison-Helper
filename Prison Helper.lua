@@ -10,6 +10,7 @@ require ('encoding').default = 'CP1251'
 local u8 = require('encoding').UTF8
 local ffi = require('ffi')
 local sampev = require('samp.events')
+function isMonetLoader() return MONET_VERSION ~= nil end
 -------------------------------------------- JSON SETTINGS ---------------------------------------------
 local settings = {}
 local default_settings = {
