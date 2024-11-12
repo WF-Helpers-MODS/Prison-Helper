@@ -844,6 +844,11 @@ local tagReplacements = {
 		return form_su
 	end,	
 }
+
+if MONET_DPI_SCALE == nil then
+    MONET_DPI_SCALE = 1.0
+end
+
 local binder_tags_text = [[
 {my_id} - Ваш ID
 {my_nick} - Ваш Никнейм 
@@ -977,6 +982,8 @@ local NightVision = false
 
 local message_color = 0x009EFF
 local message_color_hex = '{009EFF}'
+
+local post = imgui.new.char[256]()
 ------------------------------------------- Main -----------------------------------------------------
 function welcome_message()
 	if not sampIsLocalPlayerSpawned() then 
@@ -2671,14 +2678,14 @@ function sampev.onServerMessage(color,text)
 	end
 	if (settings.general.auto_doklad) then
 		if text:find('Вы успешно начали патрулирование {ff6666}поста: (.+){ffffff}.') then
-			local post = text:match('Вы успешно начали патрулирование {ff6666}поста: (.+){ffffff}.')
-			naidenpost = true
+			local postnazvanie = text:match('Вы успешно начали патрулирование {ff6666}поста: (.+){ffffff}.')
+			imgui.StrCopy(post, postnazvanie)
 		end
-		if naidenpost then
-		if text:find('Доложите о {ff6666}начале выполнения маршрута в рацию (/r){ffffff}, чтобы продолжить.') then
-			sampSendChat('/r ')
+		
+		if text:find('%[Патрулирование%] {ffffff}Доложите о {ff6666}начале выполнения маршрута в рацию %(/r%){ffffff}, чтобы продолжить.') then
+			local postStr = ffi.string(post) 
+			sampSendChat('/r Начальник Инспекции: Вильям Райт. Пост: '..postStr..'  Состояние: Стабильно')
 		end
-	end
 	end
 	if (settings.general.auto_mask) then
 		if text:find('Время действия маски истекло, вам пришлось ее выбросить.') then
