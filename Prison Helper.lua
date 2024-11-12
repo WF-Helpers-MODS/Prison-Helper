@@ -975,6 +975,8 @@ local enem_show = false
 local InfraredVision = false
 local NightVision = false
 
+local message_color = 0x009EFF
+local message_color_hex = '{009EFF}'
 ------------------------------------------- Main -----------------------------------------------------
 function welcome_message()
 	if not sampIsLocalPlayerSpawned() then 
