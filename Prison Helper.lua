@@ -2,7 +2,7 @@
 
 script_name("Prison Helper")
 script_description('Скрипт для Тюрьмы Строгого Режима LV')
-script_author("WF Helpers MODS")
+script_author("MTG MODS")
 script_version("0.1.6")
 
 require('lib.moonloader')
@@ -19,9 +19,7 @@ local default_settings = {
 		accent_enable = true,
 		auto_mask = false,
 		rp_chat = true,
-        rp_gun = false,
-		auto_doklad_damage = false,
-		auto_doklad_arrest = false,
+        rp_gun = true,
 		auto_change_code_siren = false,
 		auto_update_members = false,
 		auto_notify_payday = false,
@@ -668,8 +666,6 @@ print(getScreenResolution())
 local MainWindow = imgui.new.bool()
 local checkboxone = imgui.new.bool(false)
 local checkbox_accent_enable = imgui.new.bool(settings.general.accent_enable or false)
-local checkbox_autodoklad_damage =  imgui.new.bool(settings.general.auto_doklad_damage or false)
-local checkbox_autodoklad_arrest =  imgui.new.bool(settings.general.auto_doklad_arrest or false)
 local checkbox_automask =  imgui.new.bool(settings.general.auto_mask or false)
 local checkbox_change_code_siren = imgui.new.bool(settings.general.auto_change_code_siren or false)
 local checkbox_update_members = imgui.new.bool(settings.general.auto_update_members or false)
@@ -886,6 +882,31 @@ local binder_tags_text2 = [[
 
 {pause} - Поставить команду на паузу и ожидать нажатия
 ]]
+
+-------------------------------------------- MoonMonet ----------------------------------------------------
+
+local monet_no_errors, moon_monet = pcall(require, 'MoonMonet') -- безопасно подключаем библиотеку
+
+local message_color = 0x009EFF
+local message_color_hex = '{009EFF}'
+
+if settings.general.moonmonet_theme_enable and monet_no_errors then
+	function rgbToHex(rgb)
+		local r = bit.band(bit.rshift(rgb, 16), 0xFF)
+		local g = bit.band(bit.rshift(rgb, 8), 0xFF)
+		local b = bit.band(rgb, 0xFF)
+		local hex = string.format("%02X%02X%02X", r, g, b)
+		return hex
+	end
+	message_color = settings.general.moonmonet_theme_color
+	message_color_hex = '{' ..  rgbToHex(settings.general.moonmonet_theme_color) .. '}'
+   
+	theme[0] = 1
+else
+	theme[0] = 0
+end
+local tmp = imgui.ColorConvertU32ToFloat4(settings.general.moonmonet_theme_color)
+local mmcolor = imgui.new.float[3](tmp.z, tmp.y, tmp.x)
 ------------------------------------------- Mimgui Hotkey  -----------------------------------------------------
 if not isMonetLoader() then
 	hotkey_no_errors, hotkey = pcall(require, 'mimgui_hotkeys')
@@ -1474,7 +1495,7 @@ end
 -------------------------------------------- Переводчик ников ---------------------------------------------
 function TranslateNick(name)
 	if name:match('%a+') then
-        for k, v in pairs({['ph'] = 'ф',['Ph'] = 'Ф',['Ch'] = 'Ч',['ch'] = 'ч',['Th'] = 'Т',['th'] = 'т',['Sh'] = 'Ш',['sh'] = 'ш', ['ea'] = 'и',['Ae'] = 'Э',['ae'] = 'э',['size'] = 'сайз',['Jj'] = 'Джейджей',['Whi'] = 'Вай',['lack'] = 'лэк',['whi'] = 'вай',['Ck'] = 'К',['ck'] = 'к',['Kh'] = 'Х',['kh'] = 'х',['hn'] = 'н',['Hen'] = 'Ген',['Zh'] = 'Ж',['zh'] = 'ж',['Yu'] = 'Ю',['yu'] = 'ю',['Yo'] = 'Ё',['yo'] = 'ё',['Cz'] = 'Ц',['cz'] = 'ц', ['ia'] = 'я', ['ea'] = 'и',['Ya'] = 'Я', ['ya'] = 'я', ['ove'] = 'ав',['ay'] = 'эй', ['rise'] = 'райз',['oo'] = 'у', ['Oo'] = 'У', ['Ee'] = 'И', ['ee'] = 'и', ['Un'] = 'Ан', ['un'] = 'ан', ['Ci'] = 'Ци', ['ci'] = 'ци', ['yse'] = 'уз', ['cate'] = 'кейт', ['eow'] = 'яу', ['rown'] = 'раун', ['yev'] = 'уев', ['Babe'] = 'Бэйби', ['Jason'] = 'Джейсон', ['liy'] = 'лий', ['ane'] = 'ейн', ['ame'] = 'ейм'}) do
+        for k, v in pairs({['William'] = 'Вильям', ['Wright'] = 'Райт', ['ph'] = 'ф',['Ph'] = 'Ф',['Ch'] = 'Ч',['ch'] = 'ч',['Th'] = 'Т',['th'] = 'т',['Sh'] = 'Ш',['sh'] = 'ш', ['ea'] = 'и',['Ae'] = 'Э',['ae'] = 'э',['size'] = 'сайз',['Jj'] = 'Джейджей',['Whi'] = 'Вай',['lack'] = 'лэк',['whi'] = 'вай',['Ck'] = 'К',['ck'] = 'к',['Kh'] = 'Х',['kh'] = 'х',['hn'] = 'н',['Hen'] = 'Ген',['Zh'] = 'Ж',['zh'] = 'ж',['Yu'] = 'Ю',['yu'] = 'ю',['Yo'] = 'Ё',['yo'] = 'ё',['Cz'] = 'Ц',['cz'] = 'ц', ['ia'] = 'я', ['ea'] = 'и',['Ya'] = 'Я', ['ya'] = 'я', ['ove'] = 'ав',['ay'] = 'эй', ['rise'] = 'райз',['oo'] = 'у', ['Oo'] = 'У', ['Ee'] = 'И', ['ee'] = 'и', ['Un'] = 'Ан', ['un'] = 'ан', ['Ci'] = 'Ци', ['ci'] = 'ци', ['yse'] = 'уз', ['cate'] = 'кейт', ['eow'] = 'яу', ['rown'] = 'раун', ['yev'] = 'уев', ['Babe'] = 'Бэйби', ['Jason'] = 'Джейсон', ['liy'] = 'лий', ['ane'] = 'ейн', ['ame'] = 'ейм'}) do
             name = name:gsub(k, v) 
         end
 		for k, v in pairs({['B'] = 'Б',['Z'] = 'З',['T'] = 'Т',['Y'] = 'Й',['P'] = 'П',['J'] = 'Дж',['X'] = 'Кс',['G'] = 'Г',['V'] = 'В',['H'] = 'Х',['N'] = 'Н',['E'] = 'Е',['I'] = 'И',['D'] = 'Д',['O'] = 'О',['K'] = 'К',['F'] = 'Ф',['y`'] = 'ы',['e`'] = 'э',['A'] = 'А',['C'] = 'К',['L'] = 'Л',['M'] = 'М',['W'] = 'В',['Q'] = 'К',['U'] = 'А',['R'] = 'Р',['S'] = 'С',['zm'] = 'зьм',['h'] = 'х',['q'] = 'к',['y'] = 'и',['a'] = 'а',['w'] = 'в',['b'] = 'б',['v'] = 'в',['g'] = 'г',['d'] = 'д',['e'] = 'е',['z'] = 'з',['i'] = 'и',['j'] = 'ж',['k'] = 'к',['l'] = 'л',['m'] = 'м',['n'] = 'н',['o'] = 'о',['p'] = 'п',['r'] = 'р',['s'] = 'с',['t'] = 'т',['u'] = 'у',['f'] = 'ф',['x'] = 'x',['c'] = 'к',['``'] = 'ъ',['`'] = 'ь',['_'] = ' '}) do
@@ -2737,17 +2758,7 @@ function sampev.onServerMessage(color,text)
 		sampAddChatMessage('[Prison Helper] {ffffff}Вы сняли маску!', message_color)
 		return false
 	end
-	if text:find('%[Ошибка%] %{FFFFFF%}Используй: %/wanted %[уровень розыска 1%-6%]') and check_wanted then
-		return false
-	end
-	if text:find('%[Ошибка%] {FFFFFF}Игроков с таким уровнем розыска нету!') and check_wanted then 
-		return false 
-	end
-	if text:find('Вы посадили игрока (.+) в тюрьму на (%d+) минут') and settings.general.auto_doklad_arrest then
-		local nick, mins = text:match('Вы посадили игрока (.+) в тюрьму на (%d+) минут')
-		sampSendChat('/r ' .. tagReplacements.my_doklad_nick() .. ' на CONTROL. Преступник ' .. nick:gsub('_', ' ') .. ' посажен в КПЗ на ' .. mins .. ' минут!')
-	end
-	if (text:find('William_Wright%[%d+%]') and getARZServerNumber():find('20')) or text:find('%[20%]William_Wright') then
+	if (text:find('Bogdan_Martelli%[%d+%]') and getARZServerNumber():find('20')) or text:find('%[20%]Bogdan_Martelli') then
 		local lastColor = text:match("(.+){%x+}$")
    		if not lastColor then
 			lastColor = "{" .. rgba_to_hex(color) .. "}"
@@ -2755,22 +2766,22 @@ function sampev.onServerMessage(color,text)
 		if text:find('%[VIP ADV%]') or text:find('%[FOREVER%]') then
 			lastColor = "{FFFFFF}"
 		end
-		if text:find('%[20%]William_Wright%[%d+%]') then
-			-- Случай 2: [20]William_Wright[123]
-			local id = text:match('%[20%]William_Wright%[(%d+)%]') or ''
-			text = string.gsub(text, '%[20%]William_Wright%[%d+%]', message_color_hex .. '[20]MTG MODS[' .. id .. ']' .. lastColor)
+		if text:find('%[20%]Bogdan_Martelli%[%d+%]') then
+			-- Случай 2: [20]Bogdan_Martelli[123]
+			local id = text:match('%[20%]Bogdan_Martelli%[(%d+)%]') or ''
+			text = string.gsub(text, '%[20%]Bogdan_Martelli%[%d+%]', message_color_hex .. '[20]MTG MODS[' .. id .. ']' .. lastColor)
 		
-		elseif text:find('%[20%]William_Wright') then
-			-- Случай 1: [20]William_Wright
-			text = string.gsub(text, '%[20%]William_Wright', message_color_hex .. '[20]MTG MODS' .. lastColor)
+		elseif text:find('%[20%]Bogdan_Martelli') then
+			-- Случай 1: [20]Bogdan_Martelli
+			text = string.gsub(text, '%[20%]Bogdan_Martelli', message_color_hex .. '[20]MTG MODS' .. lastColor)
 		
-		elseif text:find('William_Wright%[%d+%]') then
-			-- Случай 3: William_Wright[123]
-			local id = text:match('William_Wright%[(%d+)%]') or ''
-			text = string.gsub(text, 'William_Wright%[%d+%]', message_color_hex .. 'MTG MODS[' .. id .. ']' .. lastColor)
-		elseif text:find('William_Wright') then
-			-- Случай 3: William_Wright
-			text = string.gsub(text, 'William_Wright', message_color_hex .. 'MTG MODS' .. lastColor)
+		elseif text:find('Bogdan_Martelli%[%d+%]') then
+			-- Случай 3: Bogdan_Martelli[123]
+			local id = text:match('Bogdan_Martelli%[(%d+)%]') or ''
+			text = string.gsub(text, 'Bogdan_Martelli%[%d+%]', message_color_hex .. 'MTG MODS[' .. id .. ']' .. lastColor)
+		elseif text:find('Bogdan_Martelli') then
+			-- Случай 3: Bogdan_Martelli
+			text = string.gsub(text, 'Bogdan_Martelli', message_color_hex .. 'MTG MODS' .. lastColor)
 		end
 		return {color,text}
 	end
@@ -4297,7 +4308,6 @@ imgui.OnFrame(
 					if imgui.Button(fa.CLOCK_ROTATE_LEFT .. u8' Да, сбросить', imgui.ImVec2(200 * MONET_DPI_SCALE, 25 * MONET_DPI_SCALE)) then
 						play_error_sound()
 						os.remove(path_uk)
-						os.remove(path_pdd)
 						os.remove(path_notes)
 						os.remove(path_settings)
 						os.remove(path_commands)
@@ -5679,6 +5689,7 @@ function main()
 		end 
 
 		if nowGun ~= getCurrentCharWeapon(PLAYER_PED) and settings.general.rp_gun then
+			print('test rp gun')
 			oldGun = nowGun
 			nowGun = getCurrentCharWeapon(PLAYER_PED)
 			if oldGun == 0 then
