@@ -869,7 +869,7 @@ local binder_tags_text = [[
 {get_ru_nick({arg_id})} - получить Никнейм на кирилице из аргумента ID игрока 
 ]]
 local binder_tags_text2 = [[
-{show_deportament_menu} - Открыть меню рации депортамента
+{show_deportament_menu} - Открыть меню рации департамента
 
 {lmenu_vc_vize} - Авто-выдача визы Vice City
 
@@ -3416,7 +3416,7 @@ imgui.OnFrame(
 							imgui.Columns(3)
 							imgui.CenterColumnText(u8"/dep")
 							imgui.NextColumn()
-							imgui.CenterColumnText(u8"Открыть меню рации депортамента")
+							imgui.CenterColumnText(u8"Открыть меню рации департамента")
 							imgui.NextColumn()
 							imgui.CenterColumnText(u8"Недоступно")
 							imgui.Columns(1)
@@ -4355,7 +4355,7 @@ imgui.OnFrame(
     function() return DeportamentWindow[0] end,
     function(player)
 		imgui.SetNextWindowPos(imgui.ImVec2(sizeX / 2, sizeY / 2), imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
-		imgui.Begin(fa.WALKIE_TALKIE .. u8" Рация депортамента", DeportamentWindow, imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoResize + imgui.WindowFlags.AlwaysAutoResize)
+		imgui.Begin(fa.WALKIE_TALKIE .. u8" Рация департамента", DeportamentWindow, imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoResize + imgui.WindowFlags.AlwaysAutoResize)
 		imgui.BeginChild('##2', imgui.ImVec2(589 * MONET_DPI_SCALE, 160 * MONET_DPI_SCALE), true)
 		imgui.Columns(3)
 		imgui.CenterColumnText(u8('Ваш тег:'))
