@@ -39,6 +39,7 @@ local default_settings = {
 		bind_fastmenu = '[69]',
 		bind_leader_fastmenu = '[71]',
 		bind_command_stop = '[123]',
+		auto_doklad = false,
 	},
 	player_info = {
 		name_surname = '',
@@ -703,15 +704,6 @@ local colorNames = {
 	[254] = "тёмно-зелёного",
 	[255] = "тёмно-синего"
 }
-------------------------------------------- MonetLoader --------------------------------------------------
-function isMonetLoader() return MONET_VERSION ~= nil end
-if isMonetLoader() then
-	gta = ffi.load('GTASA') 
-	ffi.cdef[[ void _Z12AND_OpenLinkPKc(const char* link); ]] -- функция для открытия ссылок
-end
-if MONET_DPI_SCALE == nil then
-	MONET_DPI_SCALE = 1.0
-end
 ---------------------------------------------- Mimgui -----------------------------------------------------
 local imgui = require('mimgui')
 local fa = require('fAwesome6_solid')
@@ -932,31 +924,6 @@ local binder_tags_text2 = [[
 
 {pause} - Поставить команду на паузу и ожидать нажатия
 ]]
--------------------------------------------- MoonMonet ----------------------------------------------------
-
-local monet_no_errors, moon_monet = pcall(require, 'MoonMonet') -- безопасно подключаем библиотеку
-
-local message_color = 0xFF8B00
-local message_color_hex = '{FF8B00}'
-
-if settings.general.moonmonet_theme_enable and monet_no_errors then
-	function rgbToHex(rgb)
-		local r = bit.band(bit.rshift(rgb, 16), 0xFF)
-		local g = bit.band(bit.rshift(rgb, 8), 0xFF)
-		local b = bit.band(rgb, 0xFF)
-		local hex = string.format("%02X%02X%02X", r, g, b)
-		return hex
-	end
-	message_color = settings.general.moonmonet_theme_color
-	message_color_hex = '{' ..  rgbToHex(settings.general.moonmonet_theme_color) .. '}'
-   
-	theme[0] = 1
-else
-	theme[0] = 0
-end
-local tmp = imgui.ColorConvertU32ToFloat4(settings.general.moonmonet_theme_color)
-local mmcolor = imgui.new.float[3](tmp.z, tmp.y, tmp.x)
-
 ------------------------------------------- Mimgui Hotkey  -----------------------------------------------------
 if not isMonetLoader() then
 	hotkey_no_errors, hotkey = pcall(require, 'mimgui_hotkeys')
@@ -1060,9 +1027,7 @@ function welcome_message()
 	end
 	sampAddChatMessage('[Prison Helper] {ffffff}Загрузка хелпера прошла успешно!', message_color)
 	show_cef_notify('info', 'Prison Helper', "Загрузка хелпера прошла успешно!", 3000)
-	if isMonetLoader() or settings.general.bind_mainmenu == nil or not settings.general.use_binds then	
-		sampAddChatMessage('[Prison Helper] {ffffff}Чтоб открыть меню хелпера введите команду ' .. message_color_hex .. '/ph', message_color)
-	elseif hotkey_no_errors and settings.general.bind_mainmenu and settings.general.use_binds then
+	if hotkey_no_errors and settings.general.bind_mainmenu and settings.general.use_binds then
 		sampAddChatMessage('[Prison Helper] {ffffff}Чтоб открыть меню хелпера нажмите ' .. message_color_hex .. getNameKeysFrom(settings.general.bind_mainmenu) .. ' {ffffff}или введите команду ' .. message_color_hex .. '/ph', message_color)
 	else
 		sampAddChatMessage('[Prison Helper] {ffffff}Чтоб открыть меню хелпера введите команду ' .. message_color_hex .. '/ph', message_color)
@@ -1185,9 +1150,6 @@ function register_command(chat_cmd, cmd_arg, cmd_text, cmd_waiting)
 						if command_stop then 
 							command_stop = false 
 							isActiveCommand = false
-							if isMonetLoader() and settings.general.mobile_stop_button then
-								CommandStopWindow[0] = false
-							end
 							sampAddChatMessage('[Prison Helper] {ffffff}Отыгровка команды /' .. chat_cmd .. " успешно остановлена!", message_color) 
 							return 
 						end
@@ -1562,6 +1524,7 @@ function string.rupper(s)
     end
     return output
 end
+-------------------------------------------- Переводчик ников ---------------------------------------------
 function TranslateNick(name)
 	if name:match('%a+') then
         for k, v in pairs({['ph'] = 'ф',['Ph'] = 'Ф',['Ch'] = 'Ч',['ch'] = 'ч',['Th'] = 'Т',['th'] = 'т',['Sh'] = 'Ш',['sh'] = 'ш', ['ea'] = 'и',['Ae'] = 'Э',['ae'] = 'э',['size'] = 'сайз',['Jj'] = 'Джейджей',['Whi'] = 'Вай',['lack'] = 'лэк',['whi'] = 'вай',['Ck'] = 'К',['ck'] = 'к',['Kh'] = 'Х',['kh'] = 'х',['hn'] = 'н',['Hen'] = 'Ген',['Zh'] = 'Ж',['zh'] = 'ж',['Yu'] = 'Ю',['yu'] = 'ю',['Yo'] = 'Ё',['yo'] = 'ё',['Cz'] = 'Ц',['cz'] = 'ц', ['ia'] = 'я', ['ea'] = 'и',['Ya'] = 'Я', ['ya'] = 'я', ['ove'] = 'ав',['ay'] = 'эй', ['rise'] = 'райз',['oo'] = 'у', ['Oo'] = 'У', ['Ee'] = 'И', ['ee'] = 'и', ['Un'] = 'Ан', ['un'] = 'ан', ['Ci'] = 'Ци', ['ci'] = 'ци', ['yse'] = 'уз', ['cate'] = 'кейт', ['eow'] = 'яу', ['rown'] = 'раун', ['yev'] = 'уев', ['Babe'] = 'Бэйби', ['Jason'] = 'Джейсон', ['liy'] = 'лий', ['ane'] = 'ейн', ['ame'] = 'ейм'}) do
@@ -2774,6 +2737,13 @@ function sampev.onServerMessage(color,text)
 		sampAddChatMessage('[Prison Helper] {ffffff}У игрока ' .. nick .. ' нету трудовой книжки, выдайте её используя ' .. message_color_hex .. cmd .. ' ' .. sampGetPlayerIdByNickname(nick), message_color)
 		return false
 	end
+	if (settings.general.auto_doklad) then
+		if text:find('[Патрулирование] Доложите о начале выполнения маршрута в рацию (/r), чтобы продолжить.') then
+			--sampSendChat('')
+			sampAddChatMessage('[Prison Helper] Test', message_color)
+			return false
+		end
+	end
 	if (settings.general.auto_mask) then
 		if text:find('Время действия маски истекло, вам пришлось ее выбросить.') then
 			sampAddChatMessage('[Prison Helper] {ffffff}Время действия маски истекло, автоматически надеваю новую', message_color)
@@ -3101,7 +3071,6 @@ function sampev.onShowDialog(dialogid, style, title, button1, button2, text)
 	end
 	
 end
--- function OnShowCEFDialog(dialogid) end
 function onReceivePacket(id, bs)  
 	if isMonetLoader() then
 		if id == 220 then
@@ -3304,23 +3273,7 @@ imgui.OnFrame(
 				
 				imgui.EndChild()
 				end
-				if imgui.BeginChild('##2', imgui.ImVec2(589 * MONET_DPI_SCALE, 53 * MONET_DPI_SCALE), true) then
-					imgui.CenterText(fa.ROBOT .. u8' Асистент')
-					imgui.Separator()
-					imgui.Columns(2)
-					imgui.CenterColumnText(u8("Ваш незаменимый помощник для автоматизации некоторых действий"))
-					imgui.SetColumnWidth(-1, 480 * MONET_DPI_SCALE)
-					imgui.NextColumn()
-					if imgui.CenterColumnSmallButton(u8'Управление') then
-						sampAddChatMessage('[Prison Helper] {ffffff}Ассистент доступен только за донат разработчику - MTG MODS!', message_color)
-						sampAddChatMessage('[Prison Helper] {ffffff}Реквизы для доната есть в настройках скрипта', message_color)
-						sampAddChatMessage('[Prison Helper] {ffffff}Так-же за донат вы получите много других доп функий например бинды любых команд', message_color)
-					end
-					imgui.SetColumnWidth(-1, 100 * MONET_DPI_SCALE)
-					imgui.Columns(1)
-				imgui.EndChild()
-				end
-				if imgui.BeginChild('##3', imgui.ImVec2(589 * MONET_DPI_SCALE, 127 * MONET_DPI_SCALE), true) then
+				if imgui.BeginChild('##3', imgui.ImVec2(589 * MONET_DPI_SCALE, 185 * MONET_DPI_SCALE), true) then -- Размеры окна
 					imgui.CenterText(fa.SITEMAP .. u8' Дополнительные функции хелпера')
 					imgui.Separator()
 					imgui.Columns(3)
@@ -3329,14 +3282,14 @@ imgui.OnFrame(
 					if imgui.IsItemHovered() then
 						imgui.SetTooltip(u8"Отображение на экране менюшки с информацией")
 					end
-					imgui.SetColumnWidth(-1, 230 * MONET_DPI_SCALE)
+					imgui.SetColumnWidth(-1, 230 * MONET_DPI_SCALE) -- Длина названия пункта
 					imgui.NextColumn()
 					if settings.general.use_info_menu then
 						imgui.CenterColumnText(u8'Включено')
 					else
 						imgui.CenterColumnText(u8'Отключено')
 					end
-					imgui.SetColumnWidth(-1, 250 * MONET_DPI_SCALE)
+					imgui.SetColumnWidth(-1, 250 * MONET_DPI_SCALE) -- Длина описание пункта
 					imgui.NextColumn()
 					if settings.general.use_info_menu then
 						if imgui.CenterColumnSmallButton(u8'Отключить##info_menu') then
@@ -3351,7 +3304,7 @@ imgui.OnFrame(
 							save_settings()
 						end
 					end
-					imgui.SetColumnWidth(-1, 100 * MONET_DPI_SCALE)
+					imgui.SetColumnWidth(-1, 100 * MONET_DPI_SCALE) -- Размер кнопки
 					imgui.Columns(1)
 					imgui.Separator()
 					imgui.Columns(3)
@@ -3401,6 +3354,32 @@ imgui.OnFrame(
 						else
 						if imgui.CenterColumnSmallButton(u8'Включить##rp_chat') then
 							settings.general.rp_chat = true
+							save_settings()
+						end
+					end
+					imgui.Columns(1)
+					imgui.Separator()
+					imgui.Columns(3)
+					imgui.CenterColumnText(u8"Режим автодоклада")
+					imgui.SameLine(nil, 5) imgui.TextDisabled("[?]")
+					if imgui.IsItemHovered() then
+						imgui.SetTooltip(u8"Вставая на пост будет происходить автоматически доклад в рацию организации(/r).")
+					end
+					imgui.NextColumn()
+					if settings.general.auto_doklad then
+						imgui.CenterColumnText(u8'Включено')
+					else
+						imgui.CenterColumnText(u8'Отключено')
+					end
+					imgui.NextColumn()
+					if settings.general.auto_doklad then
+						if imgui.CenterColumnSmallButton(u8'Отключить##auto_doklad') then
+							settings.general.auto_doklad = false
+							save_settings()
+						end
+					else
+						if imgui.CenterColumnSmallButton(u8'Включить##auto_doklad') then
+							settings.general.auto_doklad = true
 							save_settings()
 						end
 					end
