@@ -3,7 +3,7 @@
 script_name("Prison Helper")
 script_description('Скрипт для Тюрьмы Строгого Режима LV')
 script_author("MTG MODS")
-script_version("0.1.6")
+script_version("0.1.7")
 
 require('lib.moonloader')
 require ('encoding').default = 'CP1251'
@@ -39,6 +39,7 @@ local default_settings = {
 		bind_leader_fastmenu = '[71]',
 		bind_command_stop = '[123]',
 		auto_doklad = false,
+		
 	},
 	player_info = {
 		name_surname = '',
@@ -248,7 +249,7 @@ end
 load_notes()
 -------------------------------------------- JSON SMART UK ---------------------------------------------
 local smart_uk = {}
-local path_uk = configDirectory .. "/SmartUK.json"
+local path_uk = configDirectory .. "/smartRPTP.json"
 function load_smart_uk()
 	if doesFileExist(path_uk) then
 		local file, errstr = io.open(path_uk, 'r')
@@ -300,12 +301,11 @@ local commands = {
 		{ cmd = 'time' , description = 'Посмотреть время' ,  text = '/me взглянул{sex} на свои часы с гравировкой MTG MODS и посмотрел{sex} время&/time&/do На часах видно время {get_time}.' , arg = '' , enable = true, waiting = '1.200'  },
         { cmd = 'cuff' , description = 'Надеть наручники' ,  text = '/do Наручники на тактическом поясе.&/me снимает наручники с пояса и надевает их на задержанного&/cuff {arg_id}&/do Задержанный в наручниках.' , arg = '{arg_id}' , enable = true , waiting = '1.200'},
         { cmd = 'uncuff' , description = 'Снять наручники' ,  text = '/do На тактическом поясе прикреплены ключи от наручников.&/me снимает с пояса ключ от наручников и вставляет их в наручники задержанного&/me прокручивает ключ в наручниках и снимает их с задержанного&&/uncuff {arg_id}&/do Наручники сняты с задержанного&/me кладёт ключ и наручники обратно на тактический пояс', arg = '{arg_id}', enable = true, waiting = '1.200'},
-        { cmd = 'gtm' , description = 'Повести за собой' ,  text = '/me схватывает задержанного за руки и ведёт его за собой&/gotome {arg_id}&/do Задержанный идёт в конвое.', arg = '{arg_id}', enable = true, waiting = '1.200'},
-        { cmd = 'ungtm' , description = 'Перестать вести за собой' ,  text = '/me отпускает руки задержанного и перестаёт вести его за собой&/ungotome {arg_id}', arg = '{arg_id}', enable = true, waiting = '1.200'},
+        { cmd = 'gotome' , description = 'Повести за собой' ,  text = '/me схватывает задержанного за руки и ведёт его за собой&/gotome {arg_id}&/do Задержанный идёт в конвое.', arg = '{arg_id}', enable = true, waiting = '1.200'},
+        { cmd = 'ungotome' , description = 'Перестать вести за собой' ,  text = '/me отпускает руки задержанного и перестаёт вести его за собой&/ungotome {arg_id}', arg = '{arg_id}', enable = true, waiting = '1.200'},
 		{ cmd = 't' , description = 'Достать тазер' ,  text = '/taser', arg = '', enable = true, waiting = '1.200'},
 		{ cmd = 'camon' , description = 'Включить cкрытую боди камеру' ,  text = '/do К форме прикреплена скрытая боди камера.&/me незаметным движением руки включил{sex} боди камеру.&/do Скрытая боди камера включена и снимает всё происходящее.', arg = '', enable = true, waiting = '1.200'},
 		{ cmd = 'camoff' , description = 'Выключить cкрытую боди камеру' ,  text = '/do К форме прикреплена скрытая боди камера.&/me незаметным движением руки выключил{sex} боди камеру.&/do Скрытая боди камера выключена и больше не снимает всё происходящее.', arg = '', enable = true, waiting = '1.200'},
-		{ cmd = 'unmask' , description = 'Снять балаклаву с игрока',  text = '/do Задержанный в балаклаве.&/me стягивает балаклаву с головы задеражнного&/unmask {arg_id}', arg = '{arg_id}', enable = true, waiting = '1.200'},
 		{ cmd = 'book' , description = 'Выдача игроку трудовой книги' , text = 'Оказывается у вас нету трудовой книги, но не переживайте!&Сейчас я вам выдам её, вам не нужно никуда ехать, секунду...&/me достаёт из своего кармана новую трудовую книжку и ставит на ней печать {fraction_tag}&/todo Берите*передавая трудовую книгу челоку напротив&/givewbook {arg_id} 100&/n {get_nick({arg_id})}, примите предложение в /offer чтобы получить трудовую книгу!' , arg = '{arg_id}', enable = true, waiting = '1.200'  },
 	},
 	commands_manage = {
@@ -738,7 +738,7 @@ local updateVer = ""
 local updateInfoText = ""
 local need_update_helper = false
 local download_helper = false
-local download_smartuk = false
+local download_smartRPTP = false
 local download_arzvehicles = false
 
 local BinderWindow = imgui.new.bool()
@@ -1253,7 +1253,7 @@ function initialize_commands()
 					player_id = tonumber(arg)
 					SumMenuWindow[0] = true 
 				else
-					sampAddChatMessage('[Prison Helper] {ffffff}Сначало загрузите/отредактируйте умный розыск в /ph', message_color)
+					sampAddChatMessage('[Prison Helper] {ffffff}Сначало загрузите/отредактируйте умный регламент повышения срока в /ph', message_color)
 					play_error_sound()
 				end
 			else
@@ -2307,6 +2307,7 @@ function getARZServerNumber()
 		{name = 'Christmas', number = '28'},
 		{name = 'Mirage', number = '29'},
 		{name = 'Love', number = '30'},
+		{name = 'Drake', number = '31'},
 		{name = 'Mobile III', number = '103'},
 		{name = 'Mobile II', number = '102'},
 		{name = 'Mobile I', number = '101'},
@@ -2353,6 +2354,7 @@ function getARZServerName(number)
 		{name = 'Christmas', number = '28'},
 		{name = 'Mirage', number = '29'},
 		{name = 'Love', number = '30'},
+		{name = 'Drake', number = '31'},
 		{name = 'Mobile III', number = '103'},
 		{name = 'Mobile II', number = '102'},
 		{name = 'Mobile I', number = '101'},
@@ -2533,9 +2535,9 @@ function downloadFileFromUrlToPath(url, path)
 					sampAddChatMessage('[Prison Helper] {ffffff}Загрузка новой версии хелпера завершена успешно! Перезагрузка..',  message_color)
 					reload_script = true
 					thisScript():unload()
-				elseif download_smartuk then
-					sampAddChatMessage('[Prison Helper] {ffffff}Загрузка умной выдачи розыска для сервера ' .. getARZServerName(getARZServerNumber()) .. '[' .. getARZServerNumber() ..  '] завершена успешно!',  message_color)
-					download_smartuk = false
+				elseif download_smartRPTP then
+					sampAddChatMessage('[Prison Helper] {ffffff}Загрузка умного регламента повышения срока для сервера ' .. getARZServerName(getARZServerNumber()) .. '[' .. getARZServerNumber() ..  '] завершена успешно!',  message_color)
+					download_smartRPTP = false
 					load_smart_uk()
 				elseif download_arzvehicles then
 					sampAddChatMessage('[Prison Helper] {ffffff}Загрузка списка моделей кастом каров аризоны заверешена успешно!',  message_color)
@@ -2553,9 +2555,9 @@ function downloadFileFromUrlToPath(url, path)
 					sampAddChatMessage('[Prison Helper] {ffffff}Загрузка новой версии хелпера завершена успешно! Перезагрузка..',  message_color)
 					reload_script = true
 					thisScript():unload()
-				elseif download_smartuk then
-					sampAddChatMessage('[Prison Helper] {ffffff}Загрузка умной выдачи розыска для сервера ' .. getARZServerName(getARZServerNumber()) .. '[' .. getARZServerNumber() ..  '] завершена успешно!',  message_color)
-					download_smartuk = false
+				elseif download_smartRPTP then
+					sampAddChatMessage('[Prison Helper] {ffffff}Загрузка умного регламента повышения срока для сервера ' .. getARZServerName(getARZServerNumber()) .. '[' .. getARZServerNumber() ..  '] завершена успешно!',  message_color)
+					download_smartRPTP = false
 					load_smart_uk()
 				elseif download_arzvehicles then
 					sampAddChatMessage('[Prison Helper] {ffffff}Загрузка списка моделей кастом каров аризоны заверешена успешно!',  message_color)
@@ -2664,21 +2666,6 @@ function sampev.onServerMessage(color,text)
 					auto_uval_checker = false
 				end
 			end)
-		end
-	end
-	if tonumber(settings.player_info.fraction_rank_number) >= 6 then
-		if text:find("%[(.-)%] (.-) (.-)%[(.-)%]: (.+)") and color == 766526463 then -- /f /fb или /r /rb без тэга 
-			local tag, rank, name, playerID, message = string.match(text, "%[(.-)%] (.+) (.-)%[(.-)%]: (.+)")
-			if message:find('Прошу обьявить в розыск (%d) степени дело N(%d+)%. Причина%: (.+)') then
-				local lvl, id, reason = message:match('Прошу обьявить в розыск (%d) степени дело N(%d+)%. Причина%: (.+)')
-				form_su = id .. ' ' .. lvl .. ' ' .. reason
-				sampAddChatMessage('[Prison Helper] {ffffff}Используйте /givefsu ' .. playerID .. ' чтобы выдать розыск по запросу офицера!', message_color)
-			end
-		elseif text:find("%[(.-)%] %[(.-)%] (.+) (.-)%[(.-)%]: (.+)") and color == 766526463 then -- /r или /f с тэгом
-			local tag, tag2, rank, name, playerID, message = string.match(text, "%[(.-)%] %[(.-)%] (.+) (.-)%[(.-)%]: (.+)")
-			local lvl, id, reason = message:match('Прошу обьявить в розыск (%d) степени дело N(%d+)%. Причина%: (.+)')
-				form_su = id .. ' ' .. lvl .. ' ' .. reason
-				sampAddChatMessage('[Prison Helper] {ffffff}Используйте /givefsu ' .. playerID .. ' чтобы выдать розыск по запросу офицера!', message_color)
 		end
 	end
 	if (text:find("{FFFFFF}(.-) принял ваше предложение вступить к вам в организацию.") and tonumber(settings.player_info.fraction_rank_number) >= 9) then
@@ -2989,42 +2976,8 @@ function sampev.onShowDialog(dialogid, style, title, button1, button2, text)
 		sampSendDialogResponse(dialogid, 1, 0, 0)
 		return false
 	end
-
-	if text:find('Ник') and text:find('Уровень розыска') and text:find('Расстояние') and check_wanted then
-		local text = string.gsub(text, '%{......}', '')
-		text = string.gsub(text, 'Ник%s+Уровень розыска%s+Расстояние\n', '')
-		for line in string.gmatch(text, '[^\n]+') do
-			local nick, id, lvl, dist = string.match(line, '(%w+_%w+)%((%d+)%)%s+(%d) уровень%s+%[(.+)%]')
-			if nick and id and lvl and dist then
-				if dist:find('в интерьере') then
-					dist = 'В инте'
-				end
-				table.insert(wanted_new, {nick = nick, id = id, lvl = lvl, dist = dist})
-			end
-		end
-		sampSendDialogResponse(dialogid, 1, 999999, 0)
-		return false
-	end
-
-	if title:find('Дата и время убийства') then
-		local data = text:match('%{FFFFFF%}Дата и время%: %{90EE90%}(.+)\n%{FFFFFF%}Орудие убийства')
-		if debug_mode then sampAddChatMessage('[Prison Helper] Автозаполнение данных: ' .. data , message_color) end
-		sampSendDialogResponse(dialogid, 1, 0, data)
-		return false
-	end
-
-	if title:find('Орудие убийства') then
-		if text:find("Неизвестно") then
-			sampSendDialogResponse(dialogid, 1, 0, "Неизвестно")
-		else
-			local data = text:match('Орудие убийства%: %{90EE90%}(.+)\n\n')
-			if debug_mode then sampAddChatMessage('[Prison Helper] {ffffff}Автозаполнение данных: ' .. data , message_color) end
-			sampSendDialogResponse(dialogid, 1, 0, data)
-		end
-		return false
-	end
-	
 end
+
 function onReceivePacket(id, bs)  
 	if isMonetLoader() then
 		if id == 220 then
@@ -3334,6 +3287,32 @@ imgui.OnFrame(
 					else
 						if imgui.CenterColumnSmallButton(u8'Включить##auto_doklad') then
 							settings.general.auto_doklad = true
+							save_settings()
+						end
+					end
+					imgui.Columns(1)
+					imgui.Separator()
+					imgui.Columns(3)
+					imgui.CenterColumnText(u8"Режим авто-маска")
+					imgui.SameLine(nil, 5) imgui.TextDisabled("[?]")
+					if imgui.IsItemHovered() then
+						imgui.SetTooltip(u8"Спустя каждые 20 минут автоматически будет надевать маску.")
+					end
+					imgui.NextColumn()
+					if settings.general.auto_mask then
+						imgui.CenterColumnText(u8'Включено')
+					else
+						imgui.CenterColumnText(u8'Отключено')
+					end
+					imgui.NextColumn()
+					if settings.general.auto_mask then
+						if imgui.CenterColumnSmallButton(u8'Отключить##auto_mask') then
+							settings.general.auto_mask = false
+							save_settings()
+						end
+					else
+						if imgui.CenterColumnSmallButton(u8'Включить##auto_mask') then
+							settings.general.auto_mask = true
 							save_settings()
 						end
 					end
@@ -3813,22 +3792,22 @@ imgui.OnFrame(
 				end
 				imgui.EndTabItem()
 			end
-			if imgui.BeginTabItem(fa.STAR .. u8' Розыск') then 
-				if imgui.BeginChild('##smartuk', imgui.ImVec2(292 * MONET_DPI_SCALE, 340 * MONET_DPI_SCALE), true) then
-					imgui.CenterText(fa.STAR .. u8' Система умного розыска')
+			if imgui.BeginTabItem(fa.STAR .. u8'Положение') then 
+				if imgui.BeginChild('##smartRPTP', imgui.ImVec2(590 * MONET_DPI_SCALE, 340 * MONET_DPI_SCALE), true) then -- Размеры окна
+					imgui.CenterText(fa.STAR .. u8'Регламент повышения срока заключённым')
 					imgui.Separator()
-					imgui.SetCursorPosY(100 * MONET_DPI_SCALE)
-					imgui.SetCursorPosX(105 * MONET_DPI_SCALE)
-					if imgui.Button(fa.DOWNLOAD .. u8' Загрузить ##smartuk') then
+					imgui.SetCursorPosY(300 * MONET_DPI_SCALE) -- Отступ кнопки "Загрузить" от верхнего края
+					imgui.SetCursorPosX(20 * MONET_DPI_SCALE) -- Отступ кнопки "Загрузить" от левого края
+					if imgui.Button(fa.DOWNLOAD .. u8' Загрузить ##SmartRPTP') then
 						if getARZServerNumber() ~= 0 then
-							download_smartuk = true
-							downloadFileFromUrlToPath('https://raw.githubusercontent.com/MTGMODS/Prison-helper/main/SmartUK/' .. getARZServerNumber() .. '/SmartUK.json', path_uk)
-							imgui.OpenPopup(fa.CIRCLE_INFO .. u8' Prison Helper - Оповещение##donwloadsmartuk')
+							download_smartRPTP = true
+							downloadFileFromUrlToPath('https://raw.githubusercontent.com/WF-Helpers-MODS/Prison-Helper/refs/heads/main/Prison%20Helper/' .. getARZServerNumber() .. '/smartRPTP.json', path_uk) -- Ссылка на файл с регламентом повышения срока заключённым
+							imgui.OpenPopup(fa.CIRCLE_INFO .. u8' Prison Helper - Оповещение##donwloadsmartRPTP')
 						else
-							imgui.OpenPopup(fa.CIRCLE_INFO .. u8' Prison Helper - Оповещение##nocloudsmartuk')
+							imgui.OpenPopup(fa.CIRCLE_INFO .. u8' Prison Helper - Оповещение##nocloudsmartRPTP')
 						end
 					end
-					if imgui.BeginPopupModal(fa.CIRCLE_INFO .. u8' Prison Helper - Оповещение##nocloudsmartuk', _, imgui.WindowFlags.NoCollapse  + imgui.WindowFlags.NoResize) then
+					if imgui.BeginPopupModal(fa.CIRCLE_INFO .. u8' Prison Helper - Оповещение##nocloudsmartRPTP', _, imgui.WindowFlags.NoCollapse  + imgui.WindowFlags.NoResize) then
 						imgui.CenterText(u8'В базе данных ещё нету умного розыска для вашего сервера!')
 						imgui.Separator()
 						imgui.CenterText(u8'Вы можете вручную заполнить его по кнопке "Отредактировать"')
@@ -3839,17 +3818,17 @@ imgui.OnFrame(
 						end
 						imgui.EndPopup()
 					end
-					if imgui.BeginPopupModal(fa.CIRCLE_INFO .. u8' Prison Helper - Оповещение##donwloadsmartuk', _, imgui.WindowFlags.NoCollapse  + imgui.WindowFlags.NoResize) then
-						if download_smartuk then
+					if imgui.BeginPopupModal(fa.CIRCLE_INFO .. u8' Prison Helper - Оповещение##donwloadsmartRPTP', _, imgui.WindowFlags.NoCollapse  + imgui.WindowFlags.NoResize) then
+						if download_smartRPTP then
 							imgui.CenterText(u8'Если вы видите это окно значит идёт скачивание умного розыска для ' .. getARZServerNumber() .. u8' сервера!')
 							imgui.CenterText(u8'После заверешения загрузки это окно пропадёт и вы увидите сообщение в чате!')
 							imgui.Separator()
-							imgui.CenterText(u8'Если же ничего не происходит, значит произошла ошибка скачивания SmartUK.json')
+							imgui.CenterText(u8'Если же ничего не происходит, значит произошла ошибка скачивания smartRPTP.json')
 							imgui.CenterText(u8'Возможно в базе данных нету файла именно для вашего сервера!')
 							imgui.Separator()
 							imgui.CenterText(u8'В этом случае вы можете вручную заполнить его по кнопке "Отредактировать"')
 							imgui.CenterText(u8'Затем вы сможете поделиться им на нашем Discord и он будет загружен в базу данных')
-							imgui.CenterText(u8'Вам надо будет скинуть файл SmartUK.json , который находиться по пути:')
+							imgui.CenterText(u8'Вам надо будет скинуть файл smartRPTP.json , который находиться по пути:')
 							imgui.CenterText(u8(path_uk))
 							imgui.Separator()
 						else
@@ -3860,15 +3839,15 @@ imgui.OnFrame(
 						end
 						imgui.EndPopup()
 					end
-					imgui.SetCursorPosX(80 * MONET_DPI_SCALE)
-					imgui.SetCursorPosY(170 * MONET_DPI_SCALE)
-					if imgui.Button(fa.PEN_TO_SQUARE .. u8' Отредактировать ##smartuk') then
-						imgui.OpenPopup(fa.STAR .. u8' Система умного розыска##smartuk')
+					imgui.SetCursorPosY(300 * MONET_DPI_SCALE) -- Отступ кнопки "Отредактировать" от верхнего края
+					imgui.SetCursorPosX(430 * MONET_DPI_SCALE) -- Отступ кнопки "Отредактировать" от левого края
+					if imgui.Button(fa.PEN_TO_SQUARE .. u8' Отредактировать ##smartRPTP') then
+						imgui.OpenPopup(fa.STAR .. u8' Система умного розыска##smartRPTP')
 					end
-					imgui.SetCursorPosY(250 * MONET_DPI_SCALE)
-					imgui.CenterText(u8('Использование: /sum [ID игрока]'))
-					if imgui.BeginPopupModal(fa.STAR .. u8' Система умного розыска##smartuk', _, imgui.WindowFlags.NoCollapse  + imgui.WindowFlags.NoResize ) then
-						imgui.BeginChild('##smartukedit', imgui.ImVec2(589 * MONET_DPI_SCALE, 360 * MONET_DPI_SCALE), true)
+					--imgui.SetCursorPosY(250 * MONET_DPI_SCALE)
+					--imgui.CenterText(u8('Использование: /sum [ID игрока]'))
+					if imgui.BeginPopupModal(fa.STAR .. u8' Система умного розыска##smartRPTP', _, imgui.WindowFlags.NoCollapse  + imgui.WindowFlags.NoResize ) then
+						imgui.BeginChild('##smartRPTPedit', imgui.ImVec2(589 * MONET_DPI_SCALE, 360 * MONET_DPI_SCALE), true)
 						for chapter_index, chapter in ipairs(smart_uk) do
 							imgui.Columns(2)
 							imgui.BulletText(u8(chapter.name))
@@ -3899,7 +3878,7 @@ imgui.OnFrame(
 							imgui.SetColumnWidth(-1, 100 * MONET_DPI_SCALE)
 							imgui.Columns(1)
 							if imgui.BeginPopupModal(u8(chapter.name) .. '##' .. chapter_index, _, imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoResize) then
-								if imgui.BeginChild('##smartukedititem', imgui.ImVec2(589 * MONET_DPI_SCALE, 390 * MONET_DPI_SCALE), true) then
+								if imgui.BeginChild('##smartRPTPedititem', imgui.ImVec2(589 * MONET_DPI_SCALE, 390 * MONET_DPI_SCALE), true) then
 									if chapter.item then
 										for index, item in ipairs(chapter.item) do
 											imgui.Columns(2)
@@ -3907,22 +3886,22 @@ imgui.OnFrame(
 											imgui.SetColumnWidth(-1, 515 * MONET_DPI_SCALE)
 											imgui.NextColumn()
 											if imgui.Button(fa.PEN_TO_SQUARE .. '##' .. chapter_index .. '##' .. index) then
-												input_smartuk_text = imgui.new.char[256](u8(item.text))
-												input_smartuk_lvl = imgui.new.char[256](u8(item.lvl))
-												input_smartuk_reason = imgui.new.char[256](u8(item.reason))
+												input_smartRPTP_text = imgui.new.char[256](u8(item.text))
+												input_smartRPTP_lvl = imgui.new.char[256](u8(item.lvl))
+												input_smartRPTP_reason = imgui.new.char[256](u8(item.reason))
 												imgui.OpenPopup(fa.PEN_TO_SQUARE .. u8(" Редактирование подпункта##") .. chapter.name .. index .. chapter_index)
 											end
 											if imgui.BeginPopupModal(fa.PEN_TO_SQUARE .. u8(" Редактирование подпункта##") .. chapter.name .. index .. chapter_index, _, imgui.WindowFlags.NoCollapse  + imgui.WindowFlags.NoResize) then
-												if imgui.BeginChild('##smartukedititeminput', imgui.ImVec2(489 * MONET_DPI_SCALE, 155 * MONET_DPI_SCALE), true) then	
+												if imgui.BeginChild('##smartRPTPedititeminput', imgui.ImVec2(489 * MONET_DPI_SCALE, 155 * MONET_DPI_SCALE), true) then	
 													imgui.CenterText(u8'Название подпункта:')
 													imgui.PushItemWidth(478 * MONET_DPI_SCALE)
-													imgui.InputText(u8'##input_smartuk_text', input_smartuk_text, 256)
+													imgui.InputText(u8'##input_smartRPTP_text', input_smartRPTP_text, 256)
 													imgui.CenterText(u8'Уровень розыска для выдачи (от 1 до 6):')
 													imgui.PushItemWidth(478 * MONET_DPI_SCALE)
-													imgui.InputText(u8'##input_smartuk_lvl', input_smartuk_lvl, 256)
+													imgui.InputText(u8'##input_smartRPTP_lvl', input_smartRPTP_lvl, 256)
 													imgui.CenterText(u8'Причина для выдачи розыска:')
 													imgui.PushItemWidth(478 * MONET_DPI_SCALE)
-													imgui.InputText(u8'##input_smartuk_reason', input_smartuk_reason, 256)
+													imgui.InputText(u8'##input_smartRPTP_reason', input_smartRPTP_reason, 256)
 													imgui.EndChild()
 												end	
 												if imgui.Button(fa.CIRCLE_XMARK .. u8' Отмена', imgui.ImVec2(imgui.GetMiddleButtonX(2), 0)) then
@@ -3930,10 +3909,10 @@ imgui.OnFrame(
 												end
 												imgui.SameLine()
 												if imgui.Button(fa.FLOPPY_DISK .. u8' Сохранить', imgui.ImVec2(imgui.GetMiddleButtonX(2), 0)) then
-													if u8:decode(ffi.string(input_smartuk_lvl)) ~= '' and not u8:decode(ffi.string(input_smartuk_lvl)):find('%D') and tonumber(u8:decode(ffi.string(input_smartuk_lvl))) >= 1 and tonumber(u8:decode(ffi.string(input_smartuk_lvl))) <= 6 and u8:decode(ffi.string(input_smartuk_text)) ~= '' and u8:decode(ffi.string(input_smartuk_reason)) ~= '' then
-														item.text = u8:decode(ffi.string(input_smartuk_text))
-														item.lvl = u8:decode(ffi.string(input_smartuk_lvl))
-														item.reason = u8:decode(ffi.string(input_smartuk_reason))
+													if u8:decode(ffi.string(input_smartRPTP_lvl)) ~= '' and not u8:decode(ffi.string(input_smartRPTP_lvl)):find('%D') and tonumber(u8:decode(ffi.string(input_smartRPTP_lvl))) >= 1 and tonumber(u8:decode(ffi.string(input_smartRPTP_lvl))) <= 6 and u8:decode(ffi.string(input_smartRPTP_text)) ~= '' and u8:decode(ffi.string(input_smartRPTP_reason)) ~= '' then
+														item.text = u8:decode(ffi.string(input_smartRPTP_text))
+														item.lvl = u8:decode(ffi.string(input_smartRPTP_lvl))
+														item.reason = u8:decode(ffi.string(input_smartRPTP_reason))
 														save_smart_uk()
 														imgui.CloseCurrentPopup()
 													else
@@ -3969,22 +3948,22 @@ imgui.OnFrame(
 									imgui.EndChild()
 								end
 								if imgui.Button(fa.CIRCLE_PLUS .. u8' Добавить новый подпункт', imgui.ImVec2(imgui.GetMiddleButtonX(2), 25 * MONET_DPI_SCALE)) then
-									input_smartuk_text = imgui.new.char[256](u8(''))
-									input_smartuk_lvl = imgui.new.char[256](u8(''))
-									input_smartuk_reason = imgui.new.char[256](u8(''))
+									input_smartRPTP_text = imgui.new.char[256](u8(''))
+									input_smartRPTP_lvl = imgui.new.char[256](u8(''))
+									input_smartRPTP_reason = imgui.new.char[256](u8(''))
 									imgui.OpenPopup(fa.CIRCLE_PLUS .. u8(' Добавление нового подпункта'))
 								end
 								if imgui.BeginPopupModal(fa.CIRCLE_PLUS .. u8(' Добавление нового подпункта'), _, imgui.WindowFlags.NoCollapse  + imgui.WindowFlags.NoResize) then
-									if imgui.BeginChild('##smartukedititeminput', imgui.ImVec2(489 * MONET_DPI_SCALE, 155 * MONET_DPI_SCALE), true) then	
+									if imgui.BeginChild('##smartRPTPedititeminput', imgui.ImVec2(489 * MONET_DPI_SCALE, 155 * MONET_DPI_SCALE), true) then	
 										imgui.CenterText(u8'Название подпункта:')
 										imgui.PushItemWidth(478 * MONET_DPI_SCALE)
-										imgui.InputText(u8'##input_smartuk_text', input_smartuk_text, 256)
+										imgui.InputText(u8'##input_smartRPTP_text', input_smartRPTP_text, 256)
 										imgui.CenterText(u8'Уровень розыска для выдачи (от 1 до 6):')
 										imgui.PushItemWidth(478 * MONET_DPI_SCALE)
-										imgui.InputText(u8'##input_smartuk_lvl', input_smartuk_lvl, 256)
+										imgui.InputText(u8'##input_smartRPTP_lvl', input_smartRPTP_lvl, 256)
 										imgui.CenterText(u8'Причина для выдачи розыска:')
 										imgui.PushItemWidth(478 * MONET_DPI_SCALE)
-										imgui.InputText(u8'##input_smartuk_reason', input_smartuk_reason, 256)
+										imgui.InputText(u8'##input_smartRPTP_reason', input_smartRPTP_reason, 256)
 										imgui.EndChild()
 									end	
 									if imgui.Button(fa.CIRCLE_XMARK .. u8' Отмена', imgui.ImVec2(imgui.GetMiddleButtonX(2), 0)) then
@@ -3992,9 +3971,9 @@ imgui.OnFrame(
 									end
 									imgui.SameLine()
 									if imgui.Button(fa.FLOPPY_DISK .. u8' Сохранить', imgui.ImVec2(imgui.GetMiddleButtonX(2), 0)) then
-										local text = u8:decode(ffi.string(input_smartuk_text))
-										local lvl = u8:decode(ffi.string(input_smartuk_lvl))
-										local reason = u8:decode(ffi.string(input_smartuk_reason))
+										local text = u8:decode(ffi.string(input_smartRPTP_text))
+										local lvl = u8:decode(ffi.string(input_smartRPTP_lvl))
+										local reason = u8:decode(ffi.string(input_smartRPTP_reason))
 										if lvl ~= '' and not tostring(lvl):find('%D') and tonumber(lvl) >= 1 and tonumber(lvl) <= 6 and text ~= '' and reason ~= '' then
 											local temp = { text = text, lvl = lvl, reason = reason }
 											table.insert(chapter.item, temp)
@@ -4016,20 +3995,20 @@ imgui.OnFrame(
 						end
 						imgui.EndChild()
 						if imgui.Button(fa.CIRCLE_XMARK .. u8' Добавить пункт', imgui.ImVec2(imgui.GetMiddleButtonX(2), 0)) then
-							input_smartuk_name = imgui.new.char[256](u8(''))
+							input_smartRPTP_name = imgui.new.char[256](u8(''))
 							imgui.OpenPopup(fa.CIRCLE_PLUS .. u8' Добавление нового пункта')
 						end
 						if imgui.BeginPopupModal(fa.CIRCLE_PLUS .. u8' Добавление нового пункта', _, imgui.WindowFlags.NoCollapse  + imgui.WindowFlags.NoResize) then
 							imgui.CenterText(u8('Введите название/номер пункта и нажмите "Сохранить"'))
 							imgui.PushItemWidth(500 * MONET_DPI_SCALE)
-							imgui.InputText(u8'##input_smartuk_name', input_smartuk_name, 256)
+							imgui.InputText(u8'##input_smartRPTP_name', input_smartRPTP_name, 256)
 							imgui.CenterText(u8'Обратите внимание, вы не сможете изменить его в дальнейшем!')
 							if imgui.Button(fa.CIRCLE_XMARK .. u8' Отмена', imgui.ImVec2(imgui.GetMiddleButtonX(2), 0)) then
 								imgui.CloseCurrentPopup()
 							end
 							imgui.SameLine()
 							if imgui.Button(fa.CIRCLE_PLUS .. u8' Добавить', imgui.ImVec2(imgui.GetMiddleButtonX(2), 0)) then
-								local temp = u8:decode(ffi.string(input_smartuk_name))
+								local temp = u8:decode(ffi.string(input_smartRPTP_name))
 								local new_chapter = { name = temp, item = {} }
 								table.insert(smart_uk, new_chapter)
 								save_smart_uk()
@@ -4045,8 +4024,7 @@ imgui.OnFrame(
 					end
 					imgui.EndChild()
 				end
-				imgui.SameLine()
-				imgui.CenterText(u8'Предложения по изменению облачного розыска отправляйте в Discord или BlastHack.')
+				imgui.CenterText(u8'Предложения по изменению регламента повышения срока отправляйте в Discord.')
 			imgui.EndTabItem()
 			end			
 			if imgui.BeginTabItem(fa.FILE_PEN..u8' Заметки') then 
