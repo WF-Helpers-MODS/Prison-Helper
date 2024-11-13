@@ -247,41 +247,41 @@ function save_notes()
     end
 end
 load_notes()
--------------------------------------------- JSON SMART UK ---------------------------------------------
-local smart_uk = {}
-local path_uk = configDirectory .. "/smartRPTP.json"
-function load_smart_uk()
-	if doesFileExist(path_uk) then
-		local file, errstr = io.open(path_uk, 'r')
+----------------------- JSON SMART RPTP(Регламент повышения срока заключённым) --------------------------------------
+local smart_rptp = {}
+local path_rptp = configDirectory .. "/SmartRPTP.json"
+function load_smart_rptp()
+	if doesFileExist(path_rptp) then
+		local file, errstr = io.open(path_rptp, 'r')
         if file then
             local contents = file:read('*a')
             file:close()
 			if #contents == 0 then
-				print('[Prison Helper] Не удалось открыть файл с умным розыском!')
+				print('[Prison Helper] Не удалось открыть файл с регламентом повышения срока заключённым!')
 				print('[Prison Helper] Причина: этот файл пустой')
 			else
 				local result, loaded = pcall(decodeJson, contents)
 				if result then
-					smart_uk = loaded
-					print('[Prison Helper] Умный розыск инициализирован!')
+					smart_rptp = loaded
+					print('[Prison Helper] Регламент повышения срока заключённым инициализирован!')
 				else
-					print('[Prison Helper] Не удалось открыть файл с умным розыском!')
+					print('[Prison Helper] Не удалось открыть файл с регламентом повышения срока заключённым!')
 					print('[Prison Helper] Причина: Не удалось декодировать json (ошибка в файле)')
 				end
 			end
         else
-			print('[Prison Helper] Не удалось открыть файл с умным розыском!')
+			print('[Prison Helper] Не удалось открыть файл с регламентом повышения срока заключённым!')
 			print('[Prison Helper] Причина: ')
         end
 	else
-		print('[Prison Helper] Не удалось открыть файл с умным розыском!')
+		print('[Prison Helper] Не удалось открыть файл с регламентом повышения срока заключённым!')
 		print('[Prison Helper] Причина: этого файла нету в папке '..configDirectory)
 	end
 end
-function save_smart_uk()
-    local file, errstr = io.open(path_uk, 'w')
+function save_smart_rptp()
+    local file, errstr = io.open(path_rptp, 'w')
     if file then
-        local result, encoded = pcall(encodeJson, smart_uk)
+        local result, encoded = pcall(encodeJson, smart_rptp)
         file:write(result and encoded or "")
         file:close()
 		print('[Prison Helper] Умный розыск сохранён!')
@@ -291,7 +291,7 @@ function save_smart_uk()
         return false
     end
 end
-load_smart_uk()
+load_smart_rptp()
 -------------------------------------------- JSON COMMANDS ---------------------------------------------
 local commands = {
 	commands = {
@@ -1249,7 +1249,7 @@ function initialize_commands()
 	sampRegisterChatCommand("sum", function(arg) 
 		if not isActiveCommand then
 			if isParamSampID(arg) then
-				if #smart_uk ~= 0 then
+				if #smart_rptp ~= 0 then
 					player_id = tonumber(arg)
 					SumMenuWindow[0] = true 
 				else
@@ -2538,7 +2538,7 @@ function downloadFileFromUrlToPath(url, path)
 				elseif download_smartRPTP then
 					sampAddChatMessage('[Prison Helper] {ffffff}Загрузка умного регламента повышения срока для сервера ' .. getARZServerName(getARZServerNumber()) .. '[' .. getARZServerNumber() ..  '] завершена успешно!',  message_color)
 					download_smartRPTP = false
-					load_smart_uk()
+					load_smart_rptp()
 				elseif download_arzvehicles then
 					sampAddChatMessage('[Prison Helper] {ffffff}Загрузка списка моделей кастом каров аризоны заверешена успешно!',  message_color)
 					download_arzvehicles = false
@@ -2558,7 +2558,7 @@ function downloadFileFromUrlToPath(url, path)
 				elseif download_smartRPTP then
 					sampAddChatMessage('[Prison Helper] {ffffff}Загрузка умного регламента повышения срока для сервера ' .. getARZServerName(getARZServerNumber()) .. '[' .. getARZServerNumber() ..  '] завершена успешно!',  message_color)
 					download_smartRPTP = false
-					load_smart_uk()
+					load_smart_rptp()
 				elseif download_arzvehicles then
 					sampAddChatMessage('[Prison Helper] {ffffff}Загрузка списка моделей кастом каров аризоны заверешена успешно!',  message_color)
 					download_arzvehicles = false
@@ -3801,7 +3801,7 @@ imgui.OnFrame(
 					if imgui.Button(fa.DOWNLOAD .. u8' Загрузить ##SmartRPTP') then
 						if getARZServerNumber() ~= 0 then
 							download_smartRPTP = true
-							downloadFileFromUrlToPath('https://raw.githubusercontent.com/WF-Helpers-MODS/Prison-Helper/refs/heads/main/Prison%20Helper/' .. getARZServerNumber() .. '/smartRPTP.json', path_uk) -- Ссылка на файл с регламентом повышения срока заключённым
+							downloadFileFromUrlToPath('https://raw.githubusercontent.com/WF-Helpers-MODS/Prison-Helper/refs/heads/main/Prison%20Helper/' .. getARZServerNumber() .. '/SmartRPTP.json', path_rptp) -- Ссылка на файл с регламентом повышения срока заключённым
 							imgui.OpenPopup(fa.CIRCLE_INFO .. u8' Prison Helper - Оповещение##donwloadsmartRPTP')
 						else
 							imgui.OpenPopup(fa.CIRCLE_INFO .. u8' Prison Helper - Оповещение##nocloudsmartRPTP')
@@ -3829,7 +3829,7 @@ imgui.OnFrame(
 							imgui.CenterText(u8'В этом случае вы можете вручную заполнить его по кнопке "Отредактировать"')
 							imgui.CenterText(u8'Затем вы сможете поделиться им на нашем Discord и он будет загружен в базу данных')
 							imgui.CenterText(u8'Вам надо будет скинуть файл smartRPTP.json , который находиться по пути:')
-							imgui.CenterText(u8(path_uk))
+							imgui.CenterText(u8(path_rptp))
 							imgui.Separator()
 						else
 							imgui.CloseCurrentPopup()
@@ -3848,7 +3848,7 @@ imgui.OnFrame(
 					--imgui.CenterText(u8('Использование: /sum [ID игрока]'))
 					if imgui.BeginPopupModal(fa.STAR .. u8' Система умного розыска##smartRPTP', _, imgui.WindowFlags.NoCollapse  + imgui.WindowFlags.NoResize ) then
 						imgui.BeginChild('##smartRPTPedit', imgui.ImVec2(589 * MONET_DPI_SCALE, 360 * MONET_DPI_SCALE), true)
-						for chapter_index, chapter in ipairs(smart_uk) do
+						for chapter_index, chapter in ipairs(smart_rptp) do
 							imgui.Columns(2)
 							imgui.BulletText(u8(chapter.name))
 							imgui.SetColumnWidth(-1, 515 * MONET_DPI_SCALE)
@@ -3869,8 +3869,8 @@ imgui.OnFrame(
 								end
 								imgui.SameLine()
 								if imgui.Button(fa.TRASH_CAN .. u8' Да, удалить', imgui.ImVec2(200 * MONET_DPI_SCALE, 25 * MONET_DPI_SCALE)) then
-									table.remove(smart_uk, chapter_index)
-									save_smart_uk()
+									table.remove(smart_rptp, chapter_index)
+									save_smart_rptp()
 									imgui.CloseCurrentPopup()
 								end
 								imgui.End()
@@ -3913,7 +3913,7 @@ imgui.OnFrame(
 														item.text = u8:decode(ffi.string(input_smartRPTP_text))
 														item.lvl = u8:decode(ffi.string(input_smartRPTP_lvl))
 														item.reason = u8:decode(ffi.string(input_smartRPTP_reason))
-														save_smart_uk()
+														save_smart_rptp()
 														imgui.CloseCurrentPopup()
 													else
 														sampAddChatMessage('[Prison Helper] {ffffff}Ошибка в указанных данных, исправьте!', message_color)
@@ -3935,7 +3935,7 @@ imgui.OnFrame(
 												imgui.SameLine()
 												if imgui.Button(fa.TRASH_CAN .. u8' Да, удалить', imgui.ImVec2(200 * MONET_DPI_SCALE, 25 * MONET_DPI_SCALE)) then
 													table.remove(chapter.item, index)
-													save_smart_uk()
+													save_smart_rptp()
 													imgui.CloseCurrentPopup()
 												end
 												imgui.End()
@@ -3977,7 +3977,7 @@ imgui.OnFrame(
 										if lvl ~= '' and not tostring(lvl):find('%D') and tonumber(lvl) >= 1 and tonumber(lvl) <= 6 and text ~= '' and reason ~= '' then
 											local temp = { text = text, lvl = lvl, reason = reason }
 											table.insert(chapter.item, temp)
-											save_smart_uk()
+											save_smart_rptp()
 											imgui.CloseCurrentPopup()
 										else
 											sampAddChatMessage('[Prison Helper] {ffffff}Ошибка в указанных данных, исправьте!', message_color)
@@ -4010,8 +4010,8 @@ imgui.OnFrame(
 							if imgui.Button(fa.CIRCLE_PLUS .. u8' Добавить', imgui.ImVec2(imgui.GetMiddleButtonX(2), 0)) then
 								local temp = u8:decode(ffi.string(input_smartRPTP_name))
 								local new_chapter = { name = temp, item = {} }
-								table.insert(smart_uk, new_chapter)
-								save_smart_uk()
+								table.insert(smart_rptp, new_chapter)
+								save_smart_rptp()
 								imgui.CloseCurrentPopup()
 							end
 							imgui.EndPopup()
@@ -4285,7 +4285,7 @@ imgui.OnFrame(
 					imgui.SameLine()
 					if imgui.Button(fa.CLOCK_ROTATE_LEFT .. u8' Да, сбросить', imgui.ImVec2(200 * MONET_DPI_SCALE, 25 * MONET_DPI_SCALE)) then
 						play_error_sound()
-						os.remove(path_uk)
+						os.remove(path_rptp)
 						os.remove(path_notes)
 						os.remove(path_settings)
 						os.remove(path_commands)
@@ -4314,8 +4314,7 @@ imgui.OnFrame(
 						os.remove(path_helper)
 						os.remove(path_settings)
 						os.remove(path_commands)
-						os.remove(path_uk)
-						os.remove(path_pdd)
+						os.remove(path_rptp)
 						os.remove(path_notes)
 						thisScript():unload()
 					end
@@ -5254,7 +5253,7 @@ imgui.OnFrame(
         imgui.SetNextWindowPos(imgui.ImVec2(sizeX / 2, sizeY / 2), imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
         imgui.SetNextWindowSize(imgui.ImVec2(600 * MONET_DPI_SCALE, 413 * MONET_DPI_SCALE), imgui.Cond.FirstUseEver)
         imgui.Begin(fa.STAR .. u8" Умная выдача розыска##sum_menu", SumMenuWindow, imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoResize)
-        if smart_uk ~= nil and isParamSampID(player_id) then
+        if smart_rptp ~= nil and isParamSampID(player_id) then
 			imgui.SetWindowFontScale(1.4)
 			imgui.Text(fa.MAGNIFYING_GLASS .. u8' Поиск:')
 			imgui.SetWindowFontScale(1.0)
@@ -5277,7 +5276,7 @@ imgui.OnFrame(
 			end
 			imgui.Separator()
 			if u8:decode(ffi.string(input_sum)) == '' then
-				for _, chapter in ipairs(smart_uk) do
+				for _, chapter in ipairs(smart_rptp) do
 					if imgui.CollapsingHeader(u8(chapter.name)) then
 						if chapter.item then 
 							for _, item in ipairs(chapter.item) do
@@ -5313,7 +5312,7 @@ imgui.OnFrame(
 				end
 			else
 				local input_sum_decoded = u8:decode(ffi.string(input_sum))
-				for _, chapter in ipairs(smart_uk) do
+				for _, chapter in ipairs(smart_rptp) do
 					if chapter.name:rupper():find(input_sum_decoded:rupper()) then
 						if imgui.CollapsingHeader(u8(chapter.name)) then
 							if chapter.item then 
