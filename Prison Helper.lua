@@ -3,7 +3,7 @@
 script_name("Prison Helper")
 script_description('Скрипт для Тюрьмы Строгого Режима LV')
 script_author("MTG MODS")
-script_version("0.2.7")
+script_version("0.2.8")
 
 require('lib.moonloader')
 require ('encoding').default = 'CP1251'
@@ -298,8 +298,6 @@ local commands = {
 		{ cmd = 'zd', description = 'Привествие игрока', text = 'Здраствуйте {get_ru_nick({arg_id})}&Я {my_ru_nick} - {fraction_rank} {fraction_tag}&Чем я могу Вам помочь?', arg = '{arg_id}' , enable = true , waiting = '3.500'},
 		{ cmd = 'take', description = 'Изьятие предметов игрока', text = '/do В подсумке находиться небольшой зип-пакет.&/me достаёт из подсумка зип-пакет и отрывает его&/me кладёт в зип-пакет изьятые предметы задержанного человека&/take {arg_id}&/do Изьятые предметы в зип-пакете.&/todo Отлично*убирая зип-пакет в подсумок', arg = '{arg_id}' , enable = true , waiting = '3.500' },
         { cmd = 'cure', description = 'Поднять игрока из стадии',  text = '/me наклоняется над человеком, и прощупывает его пульс на сонной артерии&/cure {arg_id}&/do Пульс отсутствует.&/me начинает делать человеку непрямой массаж сердца, время от времени проверяя пульс&/do Спустя несколько минут сердце человека началось биться.&/do Человек пришел в сознание.&/todo Отлично*улыбаясь' , arg = '{arg_id}' , enable = true , waiting = '3.500'  },
-		{ cmd = 'fsu', description = 'Запросить выдачу розыска',  text = '/do Рация на тактическом поясе.&/me достаёт рацию и связавается с диспетчером&/me передаёт диспетчеру запрос на внесение человека в базу данных преступников&/r {my_doklad_nick} на CONTROL.&/r Прошу обьявить в розыск {arg2} степени дело N{arg_id}. Причина: {arg3}' , arg = '{arg_id} {arg2} {arg3}' , enable = true, waiting = '3.500'  },
-		{ cmd = 'givefsu', description = 'Выдача розыска по запросу офицера',  text = '/do Рация на тактическом поясе.&/me достаёт рацию и связавается с офицером для уточнения данных&/r 10-4, выдаю розыск по запросу офицера {get_rp_nick({arg_id})}!&/me достаёт свой КПК и открывает базу данных преступников&/me вносит изменения в базу данных преступников&/do Преступник занесён в базу данных преступиков.&/su {get_form_su} (по запросу офицера {get_rp_nick({arg_id})})&' , arg = '{arg_id}' , enable = true, waiting = '3.500'  },
 		{ cmd = 'carcer', description = 'Посадка в карцер игрока', text = '/do На поясе висит связка ключей.&/me прислонив заключённого к стене, снял ключ со связки, открыл дверцу камеры&/me движениями рук затолкнул заключённого в камеру, после чего закрыл её&/me движениями рук закрепил ключ к связке&/carcer {arg_id} {arg2} {arg3} {arg4}', arg = '{arg_id} {arg2} {arg3} {arg4}', enable = true, waiting = '3.500' },
 		{ cmd = 'uncarcer', description = 'Выпуск из карцера игрока', text = '/do На поясе висит связка ключей.&/me движениями рук снял ключ со связки, открыл камеру и вытолкнул из неё заключённого&/me закрыл дверцу камеры, закрепил ключ к связке&/uncarcer {arg_id}', arg = '{arg_id}', enable = true, waiting = '3.500'},
 		{ cmd = 'setcarcer', description = 'Смена карцера игроку', text = '/do На поясе висит связка ключей.&/me движениями рук снял ключ со связки, открыл свободную камеру и камеру заключённого&/me вытолкнул  заключённого из первой камеры, затолкнул во вторую, закрыв двери обоих камер&/me движениями рук закрепил ключ к связке&/setcarcer {arg_id} {arg2}', arg = '{arg_id}, {arg2}', enable = true, waiting = '3.500' },
@@ -310,11 +308,12 @@ local commands = {
 		{ cmd = 't', description = 'Достать тазер',  text = '/taser', arg = '', enable = true, waiting = '3.500'},
 		{ cmd = 'camon', description = 'Включить cкрытую боди камеру',  text = '/do К форме прикреплена скрытая боди камера.&/me незаметным движением руки включил{sex} боди камеру.&/do Скрытая боди камера включена и снимает всё происходящее.', arg = '', enable = true, waiting = '3.500'},
 		{ cmd = 'camoff', description = 'Выключить cкрытую боди камеру',  text = '/do К форме прикреплена скрытая боди камера.&/me незаметным движением руки выключил{sex} боди камеру.&/do Скрытая боди камера выключена и больше не снимает всё происходящее.', arg = '', enable = true, waiting = '3.500'},
-		{ cmd = 'time', description = 'Посмотреть время',  text = '/me взглянул{sex} на свои часы с гравировкой MTG MODS и посмотрел{sex} время&/time&/do На часах видно время {get_time}.' , arg = '' , enable = true, waiting = '3.500'  },
+		{ cmd = 'time', description = 'Посмотреть время',  text = '/me взглянул{sex} на свои часы с гравировкой MSP One Love и посмотрел{sex} время&/time&/do На часах видно время {get_time}.' , arg = '' , enable = false, waiting = '3.500'  },
 		{ cmd = 'book', description = 'Выдача игроку трудовой книги', text = 'Оказывается у вас нету трудовой книги, но не переживайте!&Сейчас я вам выдам её, вам не нужно никуда ехать, секунду...&/me достаёт из своего кармана новую трудовую книжку и ставит на ней печать {fraction_tag}&/todo Берите*передавая трудовую книгу челоку напротив&/givewbook {arg_id} 100&/n {get_nick({arg_id})}, примите предложение в /offer чтобы получить трудовую книгу!' , arg = '{arg_id}', enable = true, waiting = '3.500'  },
+		{ cmd = 'frisk', description = 'Обыск заключённого', text = '/do Перчатки на поясе.&/me схватил перчатки и одел&/do Перчатки одеты.&/me начал нащупывать человека напротив&/frisk {arg_id}', arg = '{arg_id}', enable = true, waiting = '3.500'}
 	},
-	command_senior_staff = {
-		{ cmd = 'su' , description = 'Выдать розыск' ,  text = '/me достаёт свой КПК и открывает базу данных преступников&/me вносит изменения в базу данных преступников&/do Преступник занесён в базу данных преступников.&/su {arg_id} {arg2} {arg3}&/z {arg_id}' , arg = '{arg_id} {arg2} {arg3}' , enable = true, waiting = '3.500'  },
+	commands_senior_staff = {
+		{ cmd = 'punish' , description = 'Повысить срок' ,  text = '/me достаёт свой КПК и открывает базу данных преступников&/me вносит изменения в базу данных преступников&/do Преступник занесён в базу данных преступников.&/punish {arg_id} {arg2} 2 {arg3}' , arg = '{arg_id} {arg2} {arg3}' , enable = true, waiting = '3.500'  },
 	},
 	commands_manage = {
 		{ cmd = 'inv' , description = 'Принятие игрока в фракцию' , text = '/do В кармане есть связка с ключами от раздевалки.&/me достаёт из кармана один ключ из связки ключей от раздевалки&/todo Возьмите, это ключ от нашей раздевалки*передавая ключ человеку напротив&/invite {arg_id}' , arg = '{arg_id}', enable = true, waiting = '3.500'   },
@@ -670,7 +669,7 @@ local colorNames = {
 local imgui = require('mimgui')
 local fa = require('fAwesome6_solid')
 local sizeX, sizeY = getScreenResolution()
-print(getScreenResolution())
+
 local MainWindow = imgui.new.bool()
 local checkboxone = imgui.new.bool(false)
 local checkbox_accent_enable = imgui.new.bool(settings.general.accent_enable or false)
@@ -975,16 +974,13 @@ end
 ------------------------------------------------- Other --------------------------------------------------------
 local PlayerID = nil
 local player_id = nil
+local upsu = 2
 local check_stats = false
 local anti_flood_auto_uval = false
 local spawncar_bool = false
 
 local vc_vize_bool = false
 local vc_vize_player_id = nil
-
-local godeath_player_id = nil
-local godeath_locate = ''
-local godeath_city = ''
 
 local clicked = false
 
@@ -1238,7 +1234,7 @@ function find_and_use_command(cmd, cmd_arg)
 		end
 	end
 	if not check then
-		for _, command in ipairs(command.command_senior_staff) do
+		for _, command in ipairs(command.commands_senior_staff) do
 			if command.enable and command.text:find(cmd) then
 				check = true
 				sampProcessChatInput("/" .. command.cmd .. " " .. cmd_arg)
@@ -1469,7 +1465,7 @@ function initialize_commands()
 		-- Регистрация всех команд которые есть в json для 9/10
 		registerCommandsFrom(commands.commands_manage) 
 		-- Регистрация всех комнад которые есть в json для 5+
-		--registerCommandsFrom(command.command_senior_staff)
+		registerCommandsFrom(commands.commands_senior_staff)
 	end
 end
 local russian_characters = {
@@ -1514,8 +1510,8 @@ end
 -------------------------------------------- Переводчик ников ---------------------------------------------
 function TranslateNick(name)
 	if name:match('%a+') then
-        for k, v in pairs({['William'] = 'Вильям', ['Wright'] = 'Райт', ['ph'] = 'ф',['Ph'] = 'Ф',['Ch'] = 'Ч',['ch'] = 'ч',['Th'] = 'Т',['th'] = 'т',['Sh'] = 'Ш',['sh'] = 'ш', ['ea'] = 'и',['Ae'] = 'Э',['ae'] = 'э',['size'] = 'сайз',['Jj'] = 'Джейджей',['Whi'] = 'Вай',['lack'] = 'лэк',['whi'] = 'вай',['Ck'] = 'К',['ck'] = 'к',['Kh'] = 'Х',['kh'] = 'х',['hn'] = 'н',['Hen'] = 'Ген',['Zh'] = 'Ж',['zh'] = 'ж',['Yu'] = 'Ю',['yu'] = 'ю',['Yo'] = 'Ё',['yo'] = 'ё',['Cz'] = 'Ц',['cz'] = 'ц', ['ia'] = 'я', ['ea'] = 'и',['Ya'] = 'Я', ['ya'] = 'я', ['ove'] = 'ав',['ay'] = 'эй', ['rise'] = 'райз',['oo'] = 'у', ['Oo'] = 'У', ['Ee'] = 'И', ['ee'] = 'и', ['Un'] = 'Ан', ['un'] = 'ан', ['Ci'] = 'Ци', ['ci'] = 'ци', ['yse'] = 'уз', ['cate'] = 'кейт', ['eow'] = 'яу', ['rown'] = 'раун', ['yev'] = 'уев', ['Babe'] = 'Бэйби', ['Jason'] = 'Джейсон', ['liy'] = 'лий', ['ane'] = 'ейн', ['ame'] = 'ейм'}) do
-            name = name:gsub(k, v) 
+        for k, v in pairs({['ight'] = 'айт', ['Aleksey'] = 'Алексей', ['Shved'] = 'Швед', ['William'] = 'Вильям', ['Wright'] = 'Райт', ['ph'] = 'ф',['Ph'] = 'Ф',['Ch'] = 'Ч',['ch'] = 'ч',['Th'] = 'Т',['th'] = 'т',['Sh'] = 'Ш',['sh'] = 'ш', ['ea'] = 'и',['Ae'] = 'Э',['ae'] = 'э',['size'] = 'сайз',['Jj'] = 'Джейджей',['Whi'] = 'Вай',['lack'] = 'лэк',['whi'] = 'вай',['Ck'] = 'К',['ck'] = 'к',['Kh'] = 'Х',['kh'] = 'х',['hn'] = 'н',['Hen'] = 'Ген',['Zh'] = 'Ж',['zh'] = 'ж',['Yu'] = 'Ю',['yu'] = 'ю',['Yo'] = 'Ё',['yo'] = 'ё',['Cz'] = 'Ц',['cz'] = 'ц', ['ia'] = 'я', ['ea'] = 'и',['Ya'] = 'Я', ['ya'] = 'я', ['ove'] = 'ав',['ay'] = 'эй', ['rise'] = 'райз',['oo'] = 'у', ['Oo'] = 'У', ['Ee'] = 'И', ['ee'] = 'и', ['Un'] = 'Ан', ['un'] = 'ан', ['Ci'] = 'Ци', ['ci'] = 'ци', ['yse'] = 'уз', ['cate'] = 'кейт', ['eow'] = 'яу', ['rown'] = 'раун', ['yev'] = 'уев', ['Babe'] = 'Бэйби', ['Jason'] = 'Джейсон', ['liy'] = 'лий', ['ane'] = 'ейн', ['ame'] = 'ейм'}) do
+            name = name:gsub(k, v)
         end
 		for k, v in pairs({['B'] = 'Б',['Z'] = 'З',['T'] = 'Т',['Y'] = 'Й',['P'] = 'П',['J'] = 'Дж',['X'] = 'Кс',['G'] = 'Г',['V'] = 'В',['H'] = 'Х',['N'] = 'Н',['E'] = 'Е',['I'] = 'И',['D'] = 'Д',['O'] = 'О',['K'] = 'К',['F'] = 'Ф',['y`'] = 'ы',['e`'] = 'э',['A'] = 'А',['C'] = 'К',['L'] = 'Л',['M'] = 'М',['W'] = 'В',['Q'] = 'К',['U'] = 'А',['R'] = 'Р',['S'] = 'С',['zm'] = 'зьм',['h'] = 'х',['q'] = 'к',['y'] = 'и',['a'] = 'а',['w'] = 'в',['b'] = 'б',['v'] = 'в',['g'] = 'г',['d'] = 'д',['e'] = 'е',['z'] = 'з',['i'] = 'и',['j'] = 'ж',['k'] = 'к',['l'] = 'л',['m'] = 'м',['n'] = 'н',['o'] = 'о',['p'] = 'п',['r'] = 'р',['s'] = 'с',['t'] = 'т',['u'] = 'у',['f'] = 'ф',['x'] = 'x',['c'] = 'к',['``'] = 'ъ',['`'] = 'ь',['_'] = ' '}) do
             name = name:gsub(k, v) 
@@ -3573,7 +3569,7 @@ imgui.OnFrame(
 							imgui.Columns(1)
 							imgui.Separator()
 							imgui.Columns(3)
-							for index, command in ipairs(commands.command_senior_staff) do
+							for index, command in ipairs(commands.commands_senior_staff) do
 								imgui.Columns(3)
 								if command.enable then
 									imgui.CenterColumnText('/' .. u8(command.cmd))
@@ -3652,7 +3648,7 @@ imgui.OnFrame(
 									imgui.SameLine()
 									if imgui.Button(fa.TRASH_CAN .. u8' Да, удалить', imgui.ImVec2(200 * MONET_DPI_SCALE, 25 * MONET_DPI_SCALE)) then
 										sampUnregisterChatCommand(command.cmd)
-										table.remove(commands.command_senior_staff, index)
+										table.remove(commands.commands_senior_staff, index)
 										save_commands()
 										imgui.CloseCurrentPopup()
 									end
@@ -3666,7 +3662,7 @@ imgui.OnFrame(
 						if imgui.Button(fa.CIRCLE_PLUS .. u8' Создать новую команду##new_cmd',imgui.ImVec2(imgui.GetMiddleButtonX(1), 0)) then
 							local new_cmd = {cmd = '', description = '', text = '', arg = '', enable = true , waiting = '3.500' }
 							binder_create_command_9_10 = false
-							table.insert(commands.commands, new_cmd)
+							table.insert(commands.commands_senior_staff, new_cmd)
 							change_description = new_cmd.description
 							input_description = imgui.new.char[256](u8(change_description))
 							change_arg = new_cmd.arg
@@ -3965,11 +3961,11 @@ imgui.OnFrame(
 				imgui.EndTabItem()
 			end
 			if imgui.BeginTabItem(fa.STAR .. u8'Положение') then 
-				if imgui.BeginChild('##smartRPTP', imgui.ImVec2(590 * MONET_DPI_SCALE, 340 * MONET_DPI_SCALE), true) then -- Размеры окна
+				if imgui.BeginChild('##smartRPTP', imgui.ImVec2(689 * MONET_DPI_SCALE, 340 * MONET_DPI_SCALE), true) then -- Размеры окна
 					imgui.CenterText(fa.STAR .. u8'Регламент повышения срока заключённым')
 					imgui.Separator()
 					imgui.SetCursorPosY(300 * MONET_DPI_SCALE) -- Отступ кнопки "Загрузить" от верхнего края
-					imgui.SetCursorPosX(20 * MONET_DPI_SCALE) -- Отступ кнопки "Загрузить" от левого края
+					imgui.SetCursorPosX(10 * MONET_DPI_SCALE) -- Отступ кнопки "Загрузить" от левого края
 					if imgui.Button(fa.DOWNLOAD .. u8' Загрузить ##SmartRPTP') then
 						if getARZServerNumber() ~= 0 then
 							download_smartRPTP = true
@@ -4012,7 +4008,7 @@ imgui.OnFrame(
 						imgui.EndPopup()
 					end
 					imgui.SetCursorPosY(300 * MONET_DPI_SCALE) -- Отступ кнопки "Отредактировать" от верхнего края
-					imgui.SetCursorPosX(430 * MONET_DPI_SCALE) -- Отступ кнопки "Отредактировать" от левого края
+					imgui.SetCursorPosX(540 * MONET_DPI_SCALE) -- Отступ кнопки "Отредактировать" от левого края
 					if imgui.Button(fa.PEN_TO_SQUARE .. u8' Отредактировать ##smartRPTP') then
 						imgui.OpenPopup(fa.STAR .. u8' Регламент повышения срока заключённым##smartRPTP')
 					end
@@ -4200,10 +4196,10 @@ imgui.OnFrame(
 			imgui.EndTabItem()
 			end			
 			if imgui.BeginTabItem(fa.FILE_PEN..u8' Заметки') then 
-			 	imgui.BeginChild('##1', imgui.ImVec2(589 * MONET_DPI_SCALE, 330 * MONET_DPI_SCALE), true)
+			 	imgui.BeginChild('##1', imgui.ImVec2(689 * MONET_DPI_SCALE, 330 * MONET_DPI_SCALE), true)
 				imgui.Columns(2)
 				imgui.CenterColumnText(u8"Список всех ваших заметок/шпаргалок:")
-				imgui.SetColumnWidth(-1, 495 * MONET_DPI_SCALE)
+				imgui.SetColumnWidth(-1, 595 * MONET_DPI_SCALE)
 				imgui.NextColumn()
 				imgui.CenterColumnText(u8"Действие")
 				imgui.SetColumnWidth(-1, 150 * MONET_DPI_SCALE)
@@ -4304,7 +4300,7 @@ imgui.OnFrame(
 				imgui.EndTabItem()
 			end
 			if imgui.BeginTabItem(fa.GEAR..u8' Настройки') then 
-				imgui.BeginChild('##1', imgui.ImVec2(589 * MONET_DPI_SCALE, 170 * MONET_DPI_SCALE), true)
+				imgui.BeginChild('##1', imgui.ImVec2(689 * MONET_DPI_SCALE, 170 * MONET_DPI_SCALE), true)
 				imgui.CenterText(fa.CIRCLE_INFO .. u8' Дополнительная информация про хелпер')
 				imgui.Separator()
 				imgui.Text(fa.CIRCLE_USER..u8" Разработчик данного хелпера: MTG MODS")
@@ -4367,7 +4363,7 @@ imgui.OnFrame(
 					imgui.End()
 				end
 				imgui.EndChild()
-				imgui.BeginChild('##3', imgui.ImVec2(589 * MONET_DPI_SCALE, 87 * MONET_DPI_SCALE), true)
+				imgui.BeginChild('##3', imgui.ImVec2(689 * MONET_DPI_SCALE, 87 * MONET_DPI_SCALE), true)
 				imgui.CenterText(fa.PALETTE .. u8' Цветовая тема хелпера:')
 				imgui.Separator()
 				if imgui.RadioButtonIntPtr(u8" Dark Theme ", theme, 0) then	
@@ -4409,14 +4405,14 @@ imgui.OnFrame(
 					end
 				end
 				imgui.EndChild()
-				imgui.BeginChild("##2",imgui.ImVec2(589 * MONET_DPI_SCALE, 55 * MONET_DPI_SCALE),true)
+				imgui.BeginChild("##2",imgui.ImVec2(689 * MONET_DPI_SCALE, 55 * MONET_DPI_SCALE),true)
 				-- imgui.TextWrapped(u8('Нашли баг или есть предложение по улучшению хелпера? Сообщите об этом на нашем Discord сервере или на форуме BlastHack!'))
 				-- imgui.TextWrapped(u8('Есть желание  Вы можете закинуть донатик! Реквизиты есть на нашем Discord сервере.'))
 				imgui.CenterText(u8'Нашли баг или есть предложение по улучшению хелпера?')
 				imgui.Separator()
 				imgui.CenterText(u8'Сообщите об этом на нашем Discord сервере или на форуме BlastHack!')
 				imgui.EndChild()
-				imgui.BeginChild("##4",imgui.ImVec2(589 * MONET_DPI_SCALE, 35 * MONET_DPI_SCALE),true)
+				imgui.BeginChild("##4",imgui.ImVec2(689 * MONET_DPI_SCALE, 35 * MONET_DPI_SCALE),true)
 				if imgui.Button(fa.POWER_OFF .. u8" Выключение ", imgui.ImVec2(imgui.GetMiddleButtonX(4), 25 * MONET_DPI_SCALE)) then
 					imgui.OpenPopup(fa.TRIANGLE_EXCLAMATION .. u8' Предупреждение ##off')
 				end
