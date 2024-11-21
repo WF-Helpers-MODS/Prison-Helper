@@ -3,7 +3,7 @@
 script_name("Prison Helper")
 script_description('Скрипт для Тюрьмы Строгого Режима LV')
 script_author("MTG MODS")
-script_version("0.2.8")
+script_version("0.2.9")
 
 require('lib.moonloader')
 require ('encoding').default = 'CP1251'
@@ -1232,9 +1232,8 @@ function find_and_use_command(cmd, cmd_arg)
 				return
 			end
 		end
-	end
 	if not check then
-		for _, command in ipairs(command.commands_senior_staff) do
+		for _, command in ipairs(commands.commands_senior_staff) do
 			if command.enable and command.text:find(cmd) then
 				check = true
 				sampProcessChatInput("/" .. command.cmd .. " " .. cmd_arg)
@@ -1242,6 +1241,7 @@ function find_and_use_command(cmd, cmd_arg)
 			end
 		end
 	end
+end
 	if not check then
 		sampAddChatMessage('[Prison Helper] {ffffff}Ошибка, не могу найти бинд для выполнения этой команды!', message_color)
 		play_error_sound()
@@ -1510,7 +1510,7 @@ end
 -------------------------------------------- Переводчик ников ---------------------------------------------
 function TranslateNick(name)
 	if name:match('%a+') then
-        for k, v in pairs({['ight'] = 'айт', ['Aleksey'] = 'Алексей', ['Shved'] = 'Швед', ['William'] = 'Вильям', ['Wright'] = 'Райт', ['ph'] = 'ф',['Ph'] = 'Ф',['Ch'] = 'Ч',['ch'] = 'ч',['Th'] = 'Т',['th'] = 'т',['Sh'] = 'Ш',['sh'] = 'ш', ['ea'] = 'и',['Ae'] = 'Э',['ae'] = 'э',['size'] = 'сайз',['Jj'] = 'Джейджей',['Whi'] = 'Вай',['lack'] = 'лэк',['whi'] = 'вай',['Ck'] = 'К',['ck'] = 'к',['Kh'] = 'Х',['kh'] = 'х',['hn'] = 'н',['Hen'] = 'Ген',['Zh'] = 'Ж',['zh'] = 'ж',['Yu'] = 'Ю',['yu'] = 'ю',['Yo'] = 'Ё',['yo'] = 'ё',['Cz'] = 'Ц',['cz'] = 'ц', ['ia'] = 'я', ['ea'] = 'и',['Ya'] = 'Я', ['ya'] = 'я', ['ove'] = 'ав',['ay'] = 'эй', ['rise'] = 'райз',['oo'] = 'у', ['Oo'] = 'У', ['Ee'] = 'И', ['ee'] = 'и', ['Un'] = 'Ан', ['un'] = 'ан', ['Ci'] = 'Ци', ['ci'] = 'ци', ['yse'] = 'уз', ['cate'] = 'кейт', ['eow'] = 'яу', ['rown'] = 'раун', ['yev'] = 'уев', ['Babe'] = 'Бэйби', ['Jason'] = 'Джейсон', ['liy'] = 'лий', ['ane'] = 'ейн', ['ame'] = 'ейм'}) do
+        for k, v in pairs({['Giuliano'] = 'Джулиан', ['DeMedici'] = 'ДеМедичи', ['ight'] = 'айт', ['Aleksey'] = 'Алексей', ['Shved'] = 'Швед', ['William'] = 'Вильям', ['Wright'] = 'Райт', ['ph'] = 'ф',['Ph'] = 'Ф',['Ch'] = 'Ч',['ch'] = 'ч',['Th'] = 'Т',['th'] = 'т',['Sh'] = 'Ш',['sh'] = 'ш', ['ea'] = 'и',['Ae'] = 'Э',['ae'] = 'э',['size'] = 'сайз',['Jj'] = 'Джейджей',['Whi'] = 'Вай',['lack'] = 'лэк',['whi'] = 'вай',['Ck'] = 'К',['ck'] = 'к',['Kh'] = 'Х',['kh'] = 'х',['hn'] = 'н',['Hen'] = 'Ген',['Zh'] = 'Ж',['zh'] = 'ж',['Yu'] = 'Ю',['yu'] = 'ю',['Yo'] = 'Ё',['yo'] = 'ё',['Cz'] = 'Ц',['cz'] = 'ц', ['ia'] = 'я', ['ea'] = 'и',['Ya'] = 'Я', ['ya'] = 'я', ['ove'] = 'ав',['ay'] = 'эй', ['rise'] = 'райз',['oo'] = 'у', ['Oo'] = 'У', ['Ee'] = 'И', ['ee'] = 'и', ['Un'] = 'Ан', ['un'] = 'ан', ['Ci'] = 'Ци', ['ci'] = 'ци', ['yse'] = 'уз', ['cate'] = 'кейт', ['eow'] = 'яу', ['rown'] = 'раун', ['yev'] = 'уев', ['Babe'] = 'Бэйби', ['Jason'] = 'Джейсон', ['liy'] = 'лий', ['ane'] = 'ейн', ['ame'] = 'ейм'}) do
             name = name:gsub(k, v)
         end
 		for k, v in pairs({['B'] = 'Б',['Z'] = 'З',['T'] = 'Т',['Y'] = 'Й',['P'] = 'П',['J'] = 'Дж',['X'] = 'Кс',['G'] = 'Г',['V'] = 'В',['H'] = 'Х',['N'] = 'Н',['E'] = 'Е',['I'] = 'И',['D'] = 'Д',['O'] = 'О',['K'] = 'К',['F'] = 'Ф',['y`'] = 'ы',['e`'] = 'э',['A'] = 'А',['C'] = 'К',['L'] = 'Л',['M'] = 'М',['W'] = 'В',['Q'] = 'К',['U'] = 'А',['R'] = 'Р',['S'] = 'С',['zm'] = 'зьм',['h'] = 'х',['q'] = 'к',['y'] = 'и',['a'] = 'а',['w'] = 'в',['b'] = 'б',['v'] = 'в',['g'] = 'г',['d'] = 'д',['e'] = 'е',['z'] = 'з',['i'] = 'и',['j'] = 'ж',['k'] = 'к',['l'] = 'л',['m'] = 'м',['n'] = 'н',['o'] = 'о',['p'] = 'п',['r'] = 'р',['s'] = 'с',['t'] = 'т',['u'] = 'у',['f'] = 'ф',['x'] = 'x',['c'] = 'к',['``'] = 'ъ',['`'] = 'ь',['_'] = ' '}) do
@@ -3623,10 +3623,10 @@ imgui.OnFrame(
 									end
 									change_cmd = command.cmd
 									input_cmd = imgui.new.char[256](u8(command.cmd))
-									change_text = command.text:gsub('&', '\n')		
+									change_text = command.text:gsub('&', '\n')
 									input_text = imgui.new.char[8192](u8(change_text))
 									change_waiting = command.waiting
-									waiting_slider = imgui.new.float(tonumber(command.waiting))	
+									waiting_slider = imgui.new.float(tonumber(command.waiting))
 									BinderWindow[0] = true
 								end
 								if imgui.IsItemHovered() then
@@ -5145,7 +5145,6 @@ imgui.OnFrame(
     end
 )
 
-
 imgui.OnFrame(
     function() return CommandStopWindow[0] end,
     function(player)
@@ -5806,10 +5805,10 @@ function main()
 	end
 	if settings.general.use_info_menu then
 		InformationWindow[0] = true
-	end	
+	end
 	if settings.general.mobile_meg_button and isMonetLoader() then
 		MegafonWindow[0] = true
-	end	
+	end
 	
 	local result, check = pcall(check_update)
 	if not result then
@@ -5833,7 +5832,6 @@ function main()
 		end 
 
 		if nowGun ~= getCurrentCharWeapon(PLAYER_PED) and settings.general.rp_gun then
-			print('test rp gun')
 			oldGun = nowGun
 			nowGun = getCurrentCharWeapon(PLAYER_PED)
 			if oldGun == 0 then
