@@ -3,7 +3,7 @@
 script_name("Prison Helper")
 script_description('Скрипт для Тюрьмы Строгого Режима LV')
 script_author("MTG MODS")
-script_version("0.2.9")
+script_version("0.2.10")
 
 require('lib.moonloader')
 require ('encoding').default = 'CP1251'
@@ -39,6 +39,7 @@ local default_settings = {
 		bind_leader_fastmenu = '[71]',
 		bind_command_stop = '[123]',
 		auto_doklad = false,
+		post_status = 'Неизвестно',
 		
 	},
 	player_info = {
@@ -292,6 +293,8 @@ function save_smart_rptp()
     end
 end
 load_smart_rptp()
+
+local upsu = 2
 -------------------------------------------- JSON COMMANDS (Команды) ---------------------------------------------
 local commands = {
 	commands = {
@@ -313,7 +316,7 @@ local commands = {
 		{ cmd = 'frisk', description = 'Обыск заключённого', text = '/do Перчатки на поясе.&/me схватил перчатки и одел&/do Перчатки одеты.&/me начал нащупывать человека напротив&/frisk {arg_id}', arg = '{arg_id}', enable = true, waiting = '3.500'}
 	},
 	commands_senior_staff = {
-		{ cmd = 'punish' , description = 'Повысить срок' ,  text = '/me достаёт свой КПК и открывает базу данных преступников&/me вносит изменения в базу данных преступников&/do Преступник занесён в базу данных преступников.&/punish {arg_id} {arg2} 2 {arg3}' , arg = '{arg_id} {arg2} {arg3}' , enable = true, waiting = '3.500'  },
+		{ cmd = 'punish' , description = 'Повысить срок' , text = '/me достаёт свой КПК и открывает базу данных преступников&/me вносит изменения в базу данных преступников&/do Преступник занесён в базу данных преступников.&/punish {arg_id} {arg2} ' .. upsu .. ' {arg3}' , arg = '{arg_id} {arg2} {arg3}' , enable = true, waiting = '3.500'  },
 	},
 	commands_manage = {
 		{ cmd = 'inv' , description = 'Принятие игрока в фракцию' , text = '/do В кармане есть связка с ключами от раздевалки.&/me достаёт из кармана один ключ из связки ключей от раздевалки&/todo Возьмите, это ключ от нашей раздевалки*передавая ключ человеку напротив&/invite {arg_id}' , arg = '{arg_id}', enable = true, waiting = '3.500'   },
@@ -684,6 +687,7 @@ local checkbox_mobile_meg_button = imgui.new.bool(settings.general.mobile_meg_bu
 local input_accent = imgui.new.char[256](u8(settings.player_info.accent))
 local input_name_surname = imgui.new.char[256](u8(settings.player_info.name_surname))
 local input_fraction_tag = imgui.new.char[256](u8(settings.player_info.fraction_tag))
+local input_post_status = imgui.new.char[256](u8(settings.general.post_status))
 local theme = imgui.new.int(0)
 local fastmenu_type = imgui.new.int(settings.general.mobile_fastmenu_button and 1 or 0)
 local stop_type = imgui.new.int(settings.general.mobile_stop_button and 1 or 0)
@@ -777,6 +781,7 @@ local tagReplacements = {
 	fraction_rank_number = function() return settings.player_info.fraction_rank_number end,
 	fraction_rank = function() return settings.player_info.fraction_rank end,
 	fraction_tag = function() return settings.player_info.fraction_tag end,
+	post_status = function() return settings.general.post_status end,
 	fraction = function() return settings.player_info.fraction end,
 	sex = function() 
 		if settings.player_info.sex == 'Женщина' then
@@ -862,6 +867,7 @@ local binder_tags_text = [[
 {fraction} - Ваша фракция
 {fraction_rank} - Ваша фракционная должность
 {fraction_tag} - Тэг вашей фракции
+{post_status} - Статус поста
 
 {sex} - Добавляет букву "а" если в хелпере указан женский пол
 
@@ -974,7 +980,6 @@ end
 ------------------------------------------------- Other --------------------------------------------------------
 local PlayerID = nil
 local player_id = nil
-local upsu = 2
 local check_stats = false
 local anti_flood_auto_uval = false
 local spawncar_bool = false
@@ -2721,8 +2726,8 @@ function sampev.onServerMessage(color,text)
 		end
 		
 		if text:find('%[Патрулирование%] {ffffff}Доложите о {ff6666}начале выполнения маршрута в рацию %(/r%){ffffff}, чтобы продолжить.') then
-			local postStr = ffi.string(post) 
-			sampSendChat('/r Начальник Инспекции: Вильям Райт. Пост: '..postStr..'  Состояние: Стабильно')
+			local postStr = ffi.string(post)
+			sampSendChat('/r Докладывает '..settings.player_info.fraction_rank..': '..settings.player_info.name_surname..'. Пост: '..postStr..'. Состояние: '..settings.general.post_status..'')
 		end
 	end
 	if (settings.general.auto_mask) then
@@ -3070,11 +3075,11 @@ imgui.OnFrame(
     function() return MainWindow[0] end,
     function(player)
 		imgui.SetNextWindowPos(imgui.ImVec2(sizeX / 2, sizeY / 2), imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
-		imgui.SetNextWindowSize(imgui.ImVec2(700 * MONET_DPI_SCALE, 425	* MONET_DPI_SCALE), imgui.Cond.FirstUseEver) -- Размеры всего окна
+		imgui.SetNextWindowSize(imgui.ImVec2(700 * MONET_DPI_SCALE, 436	* MONET_DPI_SCALE), imgui.Cond.FirstUseEver) -- Размеры всего окна скрипта
 		imgui.Begin(fa.BUILDING_SHIELD .. " Prison Helper##main", MainWindow, imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoResize )
 		if imgui.BeginTabBar('пон') then	
 			if imgui.BeginTabItem(fa.HOUSE..u8' Главное меню') then
-				if imgui.BeginChild('##1', imgui.ImVec2(689 * MONET_DPI_SCALE, 171 * MONET_DPI_SCALE), true) then -- Размеры первой вкладки
+				if imgui.BeginChild('##1', imgui.ImVec2(689 * MONET_DPI_SCALE, 195 * MONET_DPI_SCALE), true) then -- Размеры первой вкладки
 					imgui.CenterText(fa.USER_NURSE .. u8' Информация про сотрудника')
 					imgui.Separator()
 					imgui.Columns(3)
@@ -3198,6 +3203,31 @@ imgui.OnFrame(
 					imgui.Columns(1)
 					imgui.Separator()
 					imgui.Columns(3)
+					imgui.CenterColumnText(u8"Состояние поста:")
+					imgui.NextColumn()
+					imgui.CenterColumnText(u8(settings.general.post_status))
+					imgui.NextColumn()
+					if imgui.CenterColumnSmallButton(u8'Изменить##post_status') then
+						imgui.OpenPopup(fa.BUILDING_SHIELD .. u8' Состояние поста##post_status')
+					end
+					if imgui.BeginPopupModal(fa.BUILDING_SHIELD .. u8' Состояние поста##post_status', _, imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoResize  ) then
+						imgui.PushItemWidth(405 * MONET_DPI_SCALE)
+						imgui.InputText(u8'##input_post_status', input_post_status, 256)
+						imgui.Separator()
+						if imgui.Button(fa.CIRCLE_XMARK .. u8' Отмена', imgui.ImVec2(200 * MONET_DPI_SCALE, 25 * MONET_DPI_SCALE)) then
+							imgui.CloseCurrentPopup()
+						end
+						imgui.SameLine()
+						if imgui.Button(fa.FLOPPY_DISK .. u8' Сохранить', imgui.ImVec2(200 * MONET_DPI_SCALE, 25 * MONET_DPI_SCALE)) then
+							settings.general.post_status = u8:decode(ffi.string(input_post_status))
+							save_settings()
+							imgui.CloseCurrentPopup()
+						end
+						imgui.End()
+					end
+					imgui.Columns(1)
+					imgui.Separator()
+					imgui.Columns(3)
 					imgui.CenterColumnText(u8"Должность в организации:")
 					imgui.NextColumn()
 					imgui.CenterColumnText(u8(settings.player_info.fraction_rank) .. " (" .. settings.player_info.fraction_rank_number .. ")")
@@ -3210,7 +3240,7 @@ imgui.OnFrame(
 				
 				imgui.EndChild()
 				end
-				if imgui.BeginChild('##3', imgui.ImVec2(689 * MONET_DPI_SCALE, 185 * MONET_DPI_SCALE), true) then -- Размеры окна
+				if imgui.BeginChild('##3', imgui.ImVec2(689 * MONET_DPI_SCALE, 170 * MONET_DPI_SCALE), true) then -- Размеры окна "Дополнительные функции хелпера"
 					imgui.CenterText(fa.SITEMAP .. u8' Дополнительные функции хелпера')
 					imgui.Separator()
 					imgui.Columns(3)
@@ -3386,7 +3416,7 @@ imgui.OnFrame(
 			if imgui.BeginTabItem(fa.RECTANGLE_LIST..u8' Команды и отыгровки') then 
 				if imgui.BeginTabBar('Tabs2') then
 					if imgui.BeginTabItem(fa.BARS..u8' Общие команды для всех рангов ') then 
-						if imgui.BeginChild('##1', imgui.ImVec2(689 * MONET_DPI_SCALE, 303 * MONET_DPI_SCALE), true) then -- Размеры второй вкладки
+						if imgui.BeginChild('##1', imgui.ImVec2(689 * MONET_DPI_SCALE, 312 * MONET_DPI_SCALE), true) then -- Размеры вкладки "Команды и отыгровки"
 							imgui.Columns(3)
 							imgui.CenterColumnText(u8"Команда")
 							imgui.SetColumnWidth(-1, 200 * MONET_DPI_SCALE) -- Размеры первого пункта второй вкладки
@@ -3961,7 +3991,7 @@ imgui.OnFrame(
 				imgui.EndTabItem()
 			end
 			if imgui.BeginTabItem(fa.STAR .. u8'Положение') then 
-				if imgui.BeginChild('##smartRPTP', imgui.ImVec2(689 * MONET_DPI_SCALE, 340 * MONET_DPI_SCALE), true) then -- Размеры окна
+				if imgui.BeginChild('##smartRPTP', imgui.ImVec2(689 * MONET_DPI_SCALE, 354 * MONET_DPI_SCALE), true) then -- Размеры окна "Положение"
 					imgui.CenterText(fa.STAR .. u8'Регламент повышения срока заключённым')
 					imgui.Separator()
 					imgui.SetCursorPosY(300 * MONET_DPI_SCALE) -- Отступ кнопки "Загрузить" от верхнего края
@@ -4196,7 +4226,7 @@ imgui.OnFrame(
 			imgui.EndTabItem()
 			end			
 			if imgui.BeginTabItem(fa.FILE_PEN..u8' Заметки') then 
-			 	imgui.BeginChild('##1', imgui.ImVec2(689 * MONET_DPI_SCALE, 330 * MONET_DPI_SCALE), true)
+			 	imgui.BeginChild('##1', imgui.ImVec2(690 * MONET_DPI_SCALE, 340 * MONET_DPI_SCALE), true) -- Размеры вкладки "Заметки" (Y - 340px; X-690px)
 				imgui.Columns(2)
 				imgui.CenterColumnText(u8"Список всех ваших заметок/шпаргалок:")
 				imgui.SetColumnWidth(-1, 595 * MONET_DPI_SCALE)
@@ -4300,7 +4330,7 @@ imgui.OnFrame(
 				imgui.EndTabItem()
 			end
 			if imgui.BeginTabItem(fa.GEAR..u8' Настройки') then 
-				imgui.BeginChild('##1', imgui.ImVec2(689 * MONET_DPI_SCALE, 170 * MONET_DPI_SCALE), true)
+				imgui.BeginChild('##1', imgui.ImVec2(690 * MONET_DPI_SCALE, 180 * MONET_DPI_SCALE), true) -- Размеры вкладки "Настройки"
 				imgui.CenterText(fa.CIRCLE_INFO .. u8' Дополнительная информация про хелпер')
 				imgui.Separator()
 				imgui.Text(fa.CIRCLE_USER..u8" Разработчик данного хелпера: MTG MODS")
@@ -5461,12 +5491,12 @@ imgui.OnFrame(
 										imgui.CloseCurrentPopup()
 									end
 									imgui.SameLine()
-									if imgui.Button(fa.STAR .. u8' Выдать розыск', imgui.ImVec2(200 * MONET_DPI_SCALE, 25 * MONET_DPI_SCALE)) then
+									if imgui.Button(fa.STAR .. u8' Выдать повышение срока', imgui.ImVec2(200 * MONET_DPI_SCALE, 25 * MONET_DPI_SCALE)) then
 										SumMenuWindow[0] = false
 										if settings.general.use_form_su then
 											find_and_use_command('Прошу обьявить в розыск %{arg2%} степени дело N', player_id .. ' ' .. item.lvl .. ' ' .. item.reason)
 										else
-											find_and_use_command('/su {arg_id} {arg2} {arg3}', player_id .. ' ' .. item.lvl .. ' ' .. item.reason)
+											find_and_use_command('/punish {arg_id} {arg2}' .. upsu .. '{arg3}', player_id .. ' ' .. item.lvl .. ' ' .. item.reason)
 										end
 										imgui.CloseCurrentPopup()
 									end
@@ -5489,19 +5519,19 @@ imgui.OnFrame(
 									end 
 									if imgui.BeginPopupModal(popup_id, nil, imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoResize) then
 										imgui.Text(fa.USER .. u8' Игрок: ' .. u8(sampGetPlayerNickname(player_id)) .. ' [' .. player_id .. ']')
-										imgui.Text(fa.STAR .. u8' Уровень розыска: ' .. item.lvl)
-										imgui.Text(fa.COMMENT .. u8' Причина выдачи розыска: ' .. u8(item.reason))
+										imgui.Text(fa.STAR .. u8' Количество звёзд: ' .. item.lvl)
+										imgui.Text(fa.COMMENT .. u8' Причина повышения срока: ' .. u8(item.reason))
 										imgui.Separator()
 										if imgui.Button(fa.CIRCLE_XMARK .. u8' Отмена', imgui.ImVec2(200 * MONET_DPI_SCALE, 25 * MONET_DPI_SCALE)) then
 											imgui.CloseCurrentPopup()
 										end
 										imgui.SameLine()
-										if imgui.Button(fa.STAR .. u8' Выдать розыск', imgui.ImVec2(200 * MONET_DPI_SCALE, 25 * MONET_DPI_SCALE)) then
+										if imgui.Button(fa.STAR .. u8' Выдать повышение срока', imgui.ImVec2(200 * MONET_DPI_SCALE, 25 * MONET_DPI_SCALE)) then
 											SumMenuWindow[0] = false
 											if settings.general.use_form_su then
 												find_and_use_command('Прошу обьявить в розыск %{arg2%} степени дело N%(%{arg_id%}%)%. Причина%: %{arg3%}', player_id .. ' ' .. item.lvl .. ' ' .. item.reason)
 											else
-												find_and_use_command('/su {arg_id} {arg2} {arg3}', player_id .. ' ' .. item.lvl .. ' ' .. item.reason)
+												find_and_use_command('/punish {arg_id} {arg2}' .. upsu .. '{arg3}', player_id .. ' ' .. item.lvl .. ' ' .. item.reason)
 											end
 											imgui.CloseCurrentPopup()
 										end
