@@ -3,7 +3,7 @@
 script_name("Prison Helper")
 script_description('Скрипт для Тюрьмы Строгого Режима LV')
 script_author("MTG MODS")
-script_version("0.3.10")
+script_version("0.2.10")
 
 require('lib.moonloader')
 require('encoding').default = 'CP1251'
@@ -2741,7 +2741,7 @@ function check_update()
 	local path = configDirectory .. "/Update_Info.json"
 	os.remove(path)
 	local url =
-	'https://raw.githubusercontent.com/WF-Helpers-MODS/Prison-Helper/refs/heads/main/Prison%20Helper/Update_Info.json?token=GHSAT0AAAAAAC2GZOVISSHTMVSBB7TJF7PUZZPMPEA'
+	'https://raw.githubusercontent.com/WF-Helpers-MODS/Prison-Helper/refs/heads/main/Prison%20Helper/Update_Info.json'
 	if isMonetLoader() then
 		downloadToFile(url, path, function(type, pos, total_size)
 			if type == "finished" then
